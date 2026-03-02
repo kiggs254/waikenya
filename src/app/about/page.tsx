@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { Plane, GraduationCap, Users, Trophy, Star } from "lucide-react";
+import PartnerCarousel from "@/components/PartnerCarousel";
 
 export const metadata: Metadata = {
     title: "About Us | WAI Kenya Chapter",
@@ -612,6 +613,9 @@ export default function AboutPage() {
                         </div>
                     </div>
                 </section>
+
+                {/* ── PARTNERS CAROUSEL ── */}
+                <PartnerCarousel />
 
                 {/* ── CTA ── */}
                 <section

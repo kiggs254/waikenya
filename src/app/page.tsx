@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import HeroSlider from "@/components/HeroSlider";
 import Footer from "@/components/Footer";
+import PartnerCarousel from "@/components/PartnerCarousel";
 import { Plane, GraduationCap, Handshake, Rocket, Medal, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -454,6 +455,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ── PARTNERS CAROUSEL ── */}
+        <PartnerCarousel />
       </main>
 
       <Footer />
