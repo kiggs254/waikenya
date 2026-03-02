@@ -23,7 +23,7 @@ type Event = {
     past: boolean;
 };
 
-const events: Event[] = [
+const fallbackEvents: Event[] = [
     {
         id: "giad-2021",
         title: "Girls in Aviation Day 2021",
@@ -88,6 +88,40 @@ const events: Event[] = [
     },
 ];
 
+async function getEvents(): Promise<Event[]> {
+    const baseUrl = process.env.NEXT_PUBLIC_WP_API_URL;
+    if (!baseUrl) return fallbackEvents;
+
+    try {
+        const res = await fetch(`${baseUrl}/wai_event?_embed&per_page=100`, { next: { revalidate: 60 } });
+        if (!res.ok) return fallbackEvents;
+        const data = await res.json();
+
+        return data.map((item: any) => {
+            const rawHtml = item.content?.rendered || "";
+            const paragraphs = rawHtml.split('</p>')
+                .map((p: string) => p.replace(/<[^>]+>/g, '').trim())
+                .filter(Boolean);
+
+            return {
+                id: item.slug || String(item.id),
+                title: item.title?.rendered || "Event",
+                hashtags: item.meta?.hashtags ? item.meta.hashtags.split(',').map((h: string) => h.trim()) : [],
+                date: item.meta?.event_date || "",
+                venue: item.meta?.venue || "",
+                category: item.meta?.category as "Girls in Aviation" | "Conference" | "Outreach",
+                edition: item.meta?.edition || "",
+                description: paragraphs,
+                highlights: item.meta?.highlights ? item.meta.highlights.split(',').map((h: string) => h.trim()) : [],
+                past: true,
+            };
+        });
+    } catch (error) {
+        console.error("Failed to fetch events:", error);
+        return fallbackEvents;
+    }
+}
+
 const categoryColor: Record<Event["category"], string> = {
     "Girls in Aviation": "var(--teal)",
     "Conference": "var(--gold)",
@@ -100,7 +134,9 @@ const categoryBg: Record<Event["category"], string> = {
     "Outreach": "rgba(124,92,191,0.1)",
 };
 
-export default function EventsPage() {
+export default async function EventsPage() {
+    const events = await getEvents();
+
     return (
         <>
             <Navbar />

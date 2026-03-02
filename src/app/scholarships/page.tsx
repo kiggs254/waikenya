@@ -17,7 +17,43 @@ const spotlights = [
     { name: "Melissa Martin", wai: "WAI 77913" },
 ];
 
-export default function ScholarshipsPage() {
+type Scholarship = {
+    title: string;
+    content: string[];
+    amount: string;
+    deadline: string;
+    status: string;
+};
+
+async function getScholarships(): Promise<Scholarship[]> {
+    const baseUrl = process.env.NEXT_PUBLIC_WP_API_URL;
+    if (!baseUrl) return [];
+    try {
+        const res = await fetch(`${baseUrl}/wai_scholarship?_embed&per_page=1`, { next: { revalidate: 60 } });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data.map((item: any) => {
+            const paragraphs = (item.content?.rendered || "").split('</p>')
+                .map((p: string) => p.replace(/<[^>]+>/g, '').trim())
+                .filter(Boolean);
+            return {
+                title: item.title?.rendered || "",
+                content: paragraphs,
+                amount: item.meta?.amount || "",
+                deadline: item.meta?.deadline || "",
+                status: item.meta?.status || "",
+            };
+        });
+    } catch (error) {
+        console.error("Failed to fetch scholarships:", error);
+        return [];
+    }
+}
+
+export default async function ScholarshipsPage() {
+    const scholarships = await getScholarships();
+    const featured = scholarships[0];
+
     return (
         <>
             <Navbar />
@@ -398,7 +434,7 @@ export default function ScholarshipsPage() {
                                         marginBottom: "0.75rem",
                                     }}
                                 >
-                                    Hon John Ogutu Omondi
+                                    {featured?.title || "Hon John Ogutu Omondi"}
                                 </h2>
                                 <p
                                     style={{
@@ -406,17 +442,36 @@ export default function ScholarshipsPage() {
                                         fontWeight: 700,
                                         fontSize: "1rem",
                                         marginBottom: "2rem",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "0.5rem",
                                     }}
                                 >
-                                    A passionate Aviator, Women & Girls&apos; Empowerment Champion
+                                    {featured ? (
+                                        <>
+                                            <span style={{ color: "rgba(255,255,255,0.7)" }}>Status: <span style={{ color: "var(--gold)" }}>{featured.status}</span></span>
+                                        </>
+                                    ) : (
+                                        "A passionate Aviator, Women & Girls' Empowerment Champion"
+                                    )}
                                 </p>
 
-                                <p style={{ color: "rgba(255,255,255,0.75)", lineHeight: 1.85, marginBottom: "1.5rem" }}>
-                                    The <strong style={{ color: "white" }}>Hon John Omondi Scholarship</strong> is designed to provide scholarships to academically gifted girls, boys and women from <strong style={{ color: "white" }}>disadvantaged backgrounds across Kenya</strong>, who are passionate about pursuing a career in the Aviation Industry.
-                                </p>
-                                <p style={{ color: "rgba(255,255,255,0.75)", lineHeight: 1.85, marginBottom: "1.5rem" }}>
-                                    The scholarship was formed with the belief that discipline, passion together with a chance at quality education would empower young Kenyan women and equip them with the right skills needed to make a significant positive impact towards their communities and the country.
-                                </p>
+                                {featured && featured.content.length > 0 ? (
+                                    featured.content.map((para, i) => (
+                                        <p key={i} style={{ color: "rgba(255,255,255,0.75)", lineHeight: 1.85, marginBottom: "1.5rem" }}>
+                                            {para}
+                                        </p>
+                                    ))
+                                ) : (
+                                    <>
+                                        <p style={{ color: "rgba(255,255,255,0.75)", lineHeight: 1.85, marginBottom: "1.5rem" }}>
+                                            The <strong style={{ color: "white" }}>Hon John Omondi Scholarship</strong> is designed to provide scholarships to academically gifted girls, boys and women from <strong style={{ color: "white" }}>disadvantaged backgrounds across Kenya</strong>, who are passionate about pursuing a career in the Aviation Industry.
+                                        </p>
+                                        <p style={{ color: "rgba(255,255,255,0.75)", lineHeight: 1.85, marginBottom: "1.5rem" }}>
+                                            The scholarship was formed with the belief that discipline, passion together with a chance at quality education would empower young Kenyan women and equip them with the right skills needed to make a significant positive impact towards their communities and the country.
+                                        </p>
+                                    </>
+                                )}
 
                                 {/* Quote */}
                                 <blockquote

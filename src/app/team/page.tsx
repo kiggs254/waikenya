@@ -9,7 +9,7 @@ export const metadata: Metadata = {
         "Meet the passionate team behind Women in Aviation International – Kenya Chapter. Pilots, engineers, dispatchers, and advocates working to advance women in aviation.",
 };
 
-const members: TeamMember[] = [
+const fallbackMembers: TeamMember[] = [
     {
         name: "Una Gertrude Odhiambo",
         role: "Co-Founder",
@@ -166,7 +166,40 @@ const members: TeamMember[] = [
     },
 ];
 
-export default function TeamPage() {
+async function getTeamMembers(): Promise<TeamMember[]> {
+    const baseUrl = process.env.NEXT_PUBLIC_WP_API_URL;
+    if (!baseUrl) return fallbackMembers;
+
+    try {
+        const res = await fetch(`${baseUrl}/wai_team?_embed&per_page=100`, { next: { revalidate: 60 } });
+        if (!res.ok) return fallbackMembers;
+        const data = await res.json();
+
+        return data.map((item: any) => {
+            const rawHtml = item.content?.rendered || "";
+            // Parse HTML to extract text paragraphs safely
+            const paragraphs = rawHtml.split('</p>')
+                .map((p: string) => p.replace(/<[^>]+>/g, '').trim())
+                .filter(Boolean);
+
+            return {
+                name: item.title?.rendered || "Unknown",
+                role: item.meta?.role || "",
+                tag: item.meta?.role || "",
+                image: item.meta?.external_avatar || item.featured_image_url || "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Captain-1.jpg",
+                shortBio: paragraphs[0] ? (paragraphs[0].substring(0, 150) + "...") : "",
+                bio: paragraphs,
+            };
+        });
+    } catch (error) {
+        console.error("Failed to fetch team members:", error);
+        return fallbackMembers;
+    }
+}
+
+export default async function TeamPage() {
+    const members = await getTeamMembers();
+
     return (
         <>
             <Navbar />

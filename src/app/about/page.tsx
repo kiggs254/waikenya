@@ -47,7 +47,9 @@ const membership = [
     "Airport Managers",
 ];
 
-const pioneers = [
+type Pioneer = { name: string; note: string; };
+
+const fallbackPioneers: Pioneer[] = [
     { name: "Amelia Earhart", note: "First woman to fly solo across the Atlantic" },
     { name: "Bessie Coleman", note: "First African-American woman to hold a pilot licence" },
     { name: "Eileen Collins", note: "First female Space Shuttle Commander" },
@@ -55,7 +57,46 @@ const pioneers = [
     { name: "Nicole Malachowski", note: "First female Thunderbirds demonstration pilot" },
 ];
 
-export default function AboutPage() {
+async function getPioneers(): Promise<Pioneer[]> {
+    const baseUrl = process.env.NEXT_PUBLIC_WP_API_URL;
+    if (!baseUrl) return fallbackPioneers;
+    try {
+        const res = await fetch(`${baseUrl}/wai_pioneer?_embed&per_page=100`, { next: { revalidate: 60 } });
+        if (!res.ok) return fallbackPioneers;
+        const data = await res.json();
+        return data.map((item: any) => ({
+            name: item.title?.rendered || "Unknown",
+            note: item.meta?.note || "",
+        }));
+    } catch {
+        return fallbackPioneers;
+    }
+}
+
+type Partner = { name: string; logoUrl: string; websiteUrl?: string; };
+
+async function getPartners(): Promise<Partner[] | undefined> {
+    const baseUrl = process.env.NEXT_PUBLIC_WP_API_URL;
+    if (!baseUrl) return undefined;
+    try {
+        const res = await fetch(`${baseUrl}/wai_partner?_embed&per_page=100`, { next: { revalidate: 60 } });
+        if (!res.ok) return undefined;
+        const data = await res.json();
+        if (data.length === 0) return undefined;
+        return data.map((item: any) => ({
+            name: item.title?.rendered || "Partner",
+            logoUrl: item.featured_image_url || "",
+            websiteUrl: item.meta?.website_url || "",
+        }));
+    } catch {
+        return undefined;
+    }
+}
+
+export default async function AboutPage() {
+    const pioneers = await getPioneers();
+    const partners = await getPartners();
+
     return (
         <>
             <Navbar />
@@ -615,7 +656,7 @@ export default function AboutPage() {
                 </section>
 
                 {/* ── PARTNERS CAROUSEL ── */}
-                <PartnerCarousel />
+                <PartnerCarousel partners={partners} />
 
                 {/* ── CTA ── */}
                 <section

@@ -51,7 +51,29 @@ const Bar = ({ color = "var(--teal)" }: { color?: string }) => (
 );
 
 /* ───────────────────────────────────── */
-export default function Home() {
+type Partner = { name: string; logoUrl: string; websiteUrl?: string; };
+
+async function getPartners(): Promise<Partner[] | undefined> {
+  const baseUrl = process.env.NEXT_PUBLIC_WP_API_URL;
+  if (!baseUrl) return undefined;
+  try {
+    const res = await fetch(`${baseUrl}/wai_partner?_embed&per_page=100`, { next: { revalidate: 60 } });
+    if (!res.ok) return undefined;
+    const data = await res.json();
+    if (data.length === 0) return undefined;
+    return data.map((item: any) => ({
+      name: item.title?.rendered || "Partner",
+      logoUrl: item.featured_image_url || "",
+      websiteUrl: item.meta?.website_url || "",
+    }));
+  } catch {
+    return undefined;
+  }
+}
+
+export default async function Home() {
+  const partners = await getPartners();
+
   return (
     <>
       <Navbar />
@@ -457,7 +479,7 @@ export default function Home() {
         </section>
 
         {/* ── PARTNERS CAROUSEL ── */}
-        <PartnerCarousel />
+        <PartnerCarousel partners={partners} />
       </main>
 
       <Footer />
