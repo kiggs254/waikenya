@@ -41,33 +41,36 @@ export default function Footer() {
                     }}
                 >
                     {/* Brand */}
-                    <div style={{ gridColumn: "1 / -1", maxWidth: 400 }}>
-                        <h2
-                            style={{
-                                fontSize: "2rem",
-                                fontWeight: 900,
-                                color: "white",
-                                letterSpacing: "-1px",
-                                marginBottom: "1.5rem",
-                            }}
-                        >
-                            WAI <span style={{ color: "var(--gold)" }}>KENYA</span>
-                        </h2>
-                        <p style={{ color: "rgba(255,255,255,0.55)", lineHeight: 1.8, marginBottom: "2rem" }}>
+                    <div style={{ maxWidth: 320 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1.25rem" }}>
+                            <img src="/images/logo-white.png" alt="WAI Kenya Logo" width={36} height={36} />
+                            <h2
+                                style={{
+                                    fontSize: "1.45rem",
+                                    fontWeight: 900,
+                                    color: "white",
+                                    letterSpacing: "-1px",
+                                    margin: 0,
+                                }}
+                            >
+                                WAI <span style={{ color: "var(--gold)" }}>KENYA</span>
+                            </h2>
+                        </div>
+                        <p style={{ color: "rgba(255,255,255,0.65)", lineHeight: 1.7, marginBottom: "2rem", fontSize: "0.88rem" }}>
                             A nonprofit dedicated to the encouragement and advancement of women in all aviation career fields and interests in Kenya.
                         </p>
                         <div style={{ display: "flex", gap: "1rem" }}>
                             <a href="#" className="footer-social-link" aria-label="X (Twitter)">
-                                <Twitter size={18} strokeWidth={2} />
+                                <Twitter size={17} strokeWidth={2} />
                             </a>
                             <a href="#" className="footer-social-link" aria-label="LinkedIn">
-                                <Linkedin size={18} strokeWidth={2} />
+                                <Linkedin size={17} strokeWidth={2} />
                             </a>
-                            <a href="https://www.facebook.com/WAIKenya/" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="Facebook">
-                                <Facebook size={18} strokeWidth={2} />
+                            <a href="https://www.facebook.com/WAIKenya" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="Facebook">
+                                <Facebook size={17} strokeWidth={2} />
                             </a>
-                            <a href="https://www.instagram.com/womeninaviation_kenyachapter/" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="Instagram">
-                                <Instagram size={18} strokeWidth={2} />
+                            <a href="https://www.instagram.com/womeninaviation_kenyachapter/?hl=en" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="Instagram">
+                                <Instagram size={17} strokeWidth={2} />
                             </a>
                         </div>
                     </div>

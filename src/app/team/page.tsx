@@ -190,7 +190,7 @@ async function getTeamMembers(): Promise<TeamMember[]> {
                 shortBio: paragraphs[0] ? (paragraphs[0].substring(0, 150) + "...") : "",
                 bio: paragraphs,
             };
-        });
+        }).reverse();
     } catch (error) {
         console.error("Failed to fetch team members:", error);
         return fallbackMembers;

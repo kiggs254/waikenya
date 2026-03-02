@@ -20,6 +20,7 @@ type Event = {
     edition?: string;
     description: string[];
     highlights?: string[];
+    link?: string;
     past: boolean;
 };
 
@@ -113,6 +114,7 @@ async function getEvents(): Promise<Event[]> {
                 edition: item.meta?.edition || "",
                 description: paragraphs,
                 highlights: item.meta?.highlights ? item.meta.highlights.split(',').map((h: string) => h.trim()) : [],
+                link: item.meta?.external_url || "",
                 past: true,
             };
         });
@@ -377,6 +379,14 @@ export default async function EventsPage() {
                                                         </span>
                                                     ))}
                                                 </div>
+                                            </div>
+                                        )}
+
+                                        {event.link && (
+                                            <div style={{ marginTop: "2rem" }}>
+                                                <a href={event.link} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
+                                                    <Globe size={18} /> View Event Website
+                                                </a>
                                             </div>
                                         )}
                                     </div>
