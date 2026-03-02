@@ -1,0 +1,123 @@
+.section {
+    padding: 12rem 0;
+    background: var(--brand-white);
+    overflow: hidden;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 8rem;
+}
+
+.header h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--brand-navy);
+    letter-spacing: -2px;
+}
+
+.wrapper {
+    position: relative;
+    width: 800px;
+    height: 800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border: 1px dashed var(--brand-gold);
+    border-radius: 50%;
+    animation: rotate 60s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.airplane {
+    position: relative;
+    z-index: 10;
+    width: 400px;
+    height: 400px;
+    transform: rotate(45deg);
+}
+
+.point {
+    position: absolute;
+    width: 280px;
+    z-index: 20;
+}
+
+.point h4 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--brand-navy);
+    margin-bottom: 0.5rem;
+}
+
+.point p {
+    font-size: 1rem;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+/* Positioning points around the circle */
+.p1 {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.p2 {
+    top: 50%;
+    right: -50px;
+    transform: translateY(-50%);
+    text-align: left;
+}
+
+.p3 {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.p4 {
+    top: 50%;
+    left: -50px;
+    transform: translateY(-50%);
+    text-align: right;
+}
+
+@media (max-width: 992px) {
+    .wrapper {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+    }
+
+    .circle,
+    .airplane {
+        display: none;
+    }
+
+    .point {
+        position: static;
+        width: 100%;
+        text-align: center !important;
+    }
+}

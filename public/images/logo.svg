@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Outer circle background - dark navy -->
+  <circle cx="100" cy="100" r="100" fill="#0a1f2e"/>
+  
+  <!-- Sunset sky gradient -->
+  <defs>
+    <radialGradient id="sky" cx="50%" cy="70%" r="60%">
+      <stop offset="0%" stop-color="#ff6b1a"/>
+      <stop offset="40%" stop-color="#e8420a"/>
+      <stop offset="80%" stop-color="#1a3a4a"/>
+      <stop offset="100%" stop-color="#0a1f2e"/>
+    </radialGradient>
+    <clipPath id="circle">
+      <circle cx="100" cy="100" r="88"/>
+    </clipPath>
+  </defs>
+  
+  <!-- Sky background clipped to circle -->
+  <circle cx="100" cy="100" r="88" fill="url(#sky)"/>
+  
+  <!-- Kenyan flag stripes at the bottom -->
+  <g clip-path="url(#circle)">
+    <rect x="12" y="135" width="176" height="14" fill="#006600"/>
+    <rect x="12" y="149" width="176" height="12" fill="#cc0000"/>
+    <rect x="12" y="161" width="176" height="12" fill="#000000"/>
+    <rect x="12" y="173" width="176" height="15" fill="#006600"/>
+    
+    <!-- Maasai Shield (simplified) -->
+    <ellipse cx="100" cy="157" rx="9" ry="14" fill="#cc0000" stroke="white" stroke-width="1.5"/>
+    <line x1="100" y1="143" x2="100" y2="171" stroke="white" stroke-width="1.5"/>
+    <line x1="91" y1="152" x2="109" y2="152" stroke="white" stroke-width="1.5"/>
+    <line x1="91" y1="162" x2="109" y2="162" stroke="white" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Sun glow -->
+  <circle cx="100" cy="110" r="18" fill="#ffb347" opacity="0.4"/>
+  <circle cx="100" cy="110" r="12" fill="#ff8c00" opacity="0.6"/>
+  
+  <!-- Aircraft silhouette -->
+  <!-- Fuselage -->
+  <ellipse cx="100" cy="97" rx="30" ry="5" fill="#0a1f2e" transform="rotate(-8 100 97)"/>
+  <!-- Wings -->
+  <polygon points="90,97 70,108 72,110 95,101" fill="#0a1f2e"/>
+  <polygon points="110,93 130,84 128,82 105,89" fill="#0a1f2e"/>
+  <!-- Tail -->
+  <polygon points="70,99 65,93 72,96" fill="#0a1f2e"/>
+  <!-- Nose -->
+  <ellipse cx="128" cy="90" rx="5" ry="3" fill="#0a1f2e" transform="rotate(-8 128 90)"/>
+  
+  <!-- Border ring -->
+  <circle cx="100" cy="100" r="97" fill="none" stroke="#0a1f2e" stroke-width="3"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  
+  <!-- Top text: WOMEN IN AVIATION -->
+  <path id="topArc" d="M 20,100 A 80,80 0 0,1 180,100" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="13.5" font-weight="900" fill="white" letter-spacing="2">
+    <textPath href="#topArc" startOffset="8%">WOMEN IN AVIATION</textPath>
+  </text>
+  
+  <!-- Bottom text: KENYA CHAPTER -->
+  <path id="bottomArc" d="M 28,110 A 80,80 0 0,0 172,110" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="13" font-weight="900" fill="white" letter-spacing="2">
+    <textPath href="#bottomArc" startOffset="14%">KENYA CHAPTER</textPath>
+  </text>
+</svg>

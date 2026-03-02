@@ -1,0 +1,178 @@
+.hero {
+    position: relative;
+    height: 100vh;
+    min-height: 680px;
+    overflow: hidden;
+    background: var(--teal-deep);
+}
+
+/* Slides */
+.track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.slide {
+    position: relative;
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.bg img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    filter: brightness(0.45);
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(8, 46, 58, 0.85) 0%, rgba(8, 46, 58, 0.1) 100%);
+    z-index: 1;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+    width: 100%;
+    padding-top: 5rem;
+}
+
+.label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+}
+
+.label::before {
+    content: '';
+    width: 28px;
+    height: 2px;
+    background: var(--gold);
+}
+
+.title {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: -2px;
+    line-height: 1.05;
+    max-width: 750px;
+    margin-bottom: 1.75rem;
+}
+
+.desc {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 500px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+}
+
+.actions {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+/* Controls */
+.controls {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.dot.active {
+    background: var(--gold);
+    width: 28px;
+    border-radius: 4px;
+}
+
+.arrowBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+}
+
+.arrowBtn:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--teal-deep);
+}
+
+.arrowLeft {
+    left: 2rem;
+}
+
+.arrowRight {
+    right: 2rem;
+}
+
+/* Progress bar */
+.progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--gold);
+    z-index: 10;
+    transition: width 5s linear;
+}
+
+@media (max-width: 768px) {
+    .arrowBtn {
+        display: none;
+    }
+
+    .title {
+        letter-spacing: -1px;
+    }
+}
