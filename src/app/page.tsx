@@ -121,9 +121,8 @@ export default async function Home() {
         <section className="section" id="about">
           <div className="container">
             <div
+              className="grid-2"
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
                 gap: "6rem",
                 alignItems: "center",
               }}
@@ -163,11 +162,8 @@ export default async function Home() {
         {/* ── 4. STATS BAR ──────────────────────────── */}
         <section style={{ background: "var(--teal-deep)", padding: "6rem 0", color: "white" }}>
           <div
-            className="container"
+            className="container grid-4"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "2rem",
               textAlign: "center",
             }}
           >

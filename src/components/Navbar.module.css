@@ -46,8 +46,20 @@
     transition: color 0.3s ease;
 }
 
-.scrolled .logoText {
+.scrolled:not(.menuOpen) .logoText {
     color: var(--teal-deep);
+}
+
+.menuOpen .logoText {
+    color: var(--white);
+}
+
+.scrolled:not(.menuOpen) .burger span {
+    background: var(--teal-deep);
+}
+
+.menuOpen .burger span {
+    background: var(--white);
 }
 
 .logoAccent {

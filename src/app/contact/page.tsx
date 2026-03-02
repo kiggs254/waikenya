@@ -120,9 +120,8 @@ export default function ContactPage() {
                 <section style={{ padding: "7rem 0", background: "var(--off-white)" }}>
                     <div className="container">
                         <div
+                            className="grid-2-asym"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1.6fr",
                                 gap: "4rem",
                                 alignItems: "start",
                             }}
@@ -295,7 +294,7 @@ export default function ContactPage() {
                                         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
 
                                             {/* Name + Email row */}
-                                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                                            <div className="grid-2" style={{ gap: "1rem" }}>
                                                 <div>
                                                     <label style={{
                                                         display: "block", fontSize: "0.78rem", fontWeight: 700,

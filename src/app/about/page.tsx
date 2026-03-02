@@ -187,9 +187,8 @@ export default async function AboutPage() {
                 <section style={{ padding: "8rem 0", background: "white" }}>
                     <div className="container">
                         <div
+                            className="grid-2"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
                                 gap: "6rem",
                                 alignItems: "start",
                             }}
@@ -530,10 +529,8 @@ export default async function AboutPage() {
                     }}
                 >
                     <div
-                        className="container"
+                        className="container grid-2"
                         style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
                             gap: "5rem",
                             alignItems: "center",
                         }}
@@ -601,9 +598,8 @@ export default async function AboutPage() {
 
                         {/* Stat blocks */}
                         <div
+                            className="grid-2"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
                                 gap: "1rem",
                             }}
                         >

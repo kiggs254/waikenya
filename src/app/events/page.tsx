@@ -229,9 +229,8 @@ export default async function EventsPage() {
                             {events.map((event, index) => (
                                 <div
                                     key={event.id}
+                                    className="grid-sidebar"
                                     style={{
-                                        display: "grid",
-                                        gridTemplateColumns: "200px 1fr",
                                         gap: 0,
                                         background: "white",
                                         borderRadius: 6,
@@ -538,7 +537,7 @@ export default async function EventsPage() {
                         </div>
 
                         {/* Key stats */}
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                        <div className="grid-2" style={{ gap: "1rem" }}>
                             {[
                                 { num: "8–17", label: "Target Age", Icon: Users },
                                 { num: "Annual", label: "Frequency", Icon: Calendar },
@@ -614,7 +613,7 @@ export default async function EventsPage() {
                     </div>
                 </section>
 
-            </main>
+            </main >
             <Footer />
         </>
     );

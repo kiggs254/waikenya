@@ -207,6 +207,18 @@ img {
   gap: 2.5rem;
 }
 
+.grid-2-asym {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 2.5rem;
+}
+
+.grid-sidebar {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2.5rem;
+}
+
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -232,9 +244,15 @@ img {
 @media (max-width: 768px) {
 
   .grid-2,
+  .grid-2-asym,
+  .grid-sidebar,
   .grid-3,
   .grid-4 {
     grid-template-columns: 1fr;
+  }
+
+  .flex-col-mb {
+    flex-direction: column !important;
   }
 }
 

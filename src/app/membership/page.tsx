@@ -397,9 +397,8 @@ export default function MembershipPage() {
                 <section id="join-form" style={{ padding: "8rem 0", background: "var(--off-white)" }}>
                     <div className="container">
                         <div
+                            className="grid-2"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
                                 gap: "6rem",
                                 alignItems: "start",
                             }}

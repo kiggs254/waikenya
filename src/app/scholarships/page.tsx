@@ -179,10 +179,8 @@ export default async function ScholarshipsPage() {
                 {/* ── ABOUT THE SCHOLARSHIP PROGRAM ── */}
                 <section style={{ padding: "8rem 0", background: "white" }}>
                     <div className="container">
-                        <div
+                        <div className="grid-2"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
                                 gap: "6rem",
                                 alignItems: "center",
                             }}
@@ -391,9 +389,8 @@ export default async function ScholarshipsPage() {
 
                     <div className="container">
                         <div
+                            className="grid-2"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
                                 gap: "7rem",
                                 alignItems: "center",
                             }}
@@ -653,9 +650,8 @@ export default async function ScholarshipsPage() {
                 <section id="apply" style={{ padding: "8rem 0", background: "white" }}>
                     <div className="container">
                         <div
+                            className="grid-2"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
                                 gap: "6rem",
                                 alignItems: "start",
                             }}
@@ -835,7 +831,7 @@ export default async function ScholarshipsPage() {
                         <Link href="/membership" className="btn-outline">View Membership Options →</Link>
                     </div>
                 </section>
-            </main>
+            </main >
 
             <Footer />
         </>

@@ -16,12 +16,12 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
+        <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ""} ${menuOpen ? styles.menuOpen : ""}`}>
             <div className={styles.inner}>
                 {/* Logo: image + text */}
                 <Link href="/" className={styles.logo}>
                     <Image
-                        src={scrolled ? "/images/logo-black.png" : "/images/logo-white.png"}
+                        src={(scrolled && !menuOpen) ? "/images/logo-black.png" : "/images/logo-white.png"}
                         alt="WAI Kenya Chapter Logo"
                         width={52}
                         height={52}

@@ -218,9 +218,8 @@ export default function TeamGrid({ members }: { members: TeamMember[] }) {
 
                         {/* Header section */}
                         <div
+                            className="grid-sidebar"
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "200px 1fr",
                                 gap: 0,
                             }}
                         >
