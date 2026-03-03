@@ -11,6 +11,23 @@ export const metadata: Metadata = {
         "Women in Aviation International is a nonprofit organization dedicated to the encouragement and advancement of women in all aviation career fields and interests.",
 };
 
+const Label = ({ text }: { text: string }) => (
+    <p
+        style={{
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "3px",
+            color: "var(--teal)",
+            marginBottom: "1rem",
+        }}
+    >
+        {text}
+    </p>
+);
+
+const Bar = () => <div style={{ width: 40, height: 4, background: "var(--gold)", marginBottom: "2rem", borderRadius: 2 }} />;
+
 const pillars = [
     {
         Icon: Plane,
@@ -45,6 +62,39 @@ const membership = [
     "University & High School Students",
     "Air Show Performers",
     "Airport Managers",
+];
+
+const scholarshipRecipients = [
+    { year: "2014", name: "Loise Mwangi", award: "Airbus Leadership & Boeing Grants" },
+    { year: "2018", name: "Maureen Okoth", award: "Bonita Jean Olson Memorial" },
+    { year: "2018", name: "Primerose Gitau", award: "Pratt & Whitney Training" },
+    { year: "2021", name: "Betty Mbatha", award: "Hilton Commercial Helicopter" },
+    { year: "2021", name: "Ellah A. Wafula", award: "ISA+21 Financial" },
+    { year: "2022", name: "Fiona Omondi", award: "Dorothy Hilbert Chapter Volunteer of the Year" },
+    { year: "2023", name: "Primerose Gitau", award: "Boeing Skills" },
+    { year: "2023", name: "Ellah Wafula", award: "Boeing / Southwest Scholarships" },
+    { year: "2023", name: "Betty Mbatha", award: "CAE Citation Bravo" },
+    { year: "2023", name: "Aretha Kimani", award: "Dare to Dream & ISA+21" },
+    { year: "2023", name: "Tonny Ndilinge", award: "Keep Flying International" },
+    { year: "2023", name: "Emily Manduku", award: "Harvard Women Leadership Program" },
+    { year: "2023", name: "Fiona Omondi", award: "Harvard Women Leadership Program" },
+    { year: "2024", name: "Maseka Kithinji", award: "Hilton Instrument Rating" },
+    { year: "2024", name: "Ernest Mwanzia Mutinda", award: "Keep Flying Extra Lift" },
+    { year: "2024", name: "Loise Mwangi", award: "Harvard Women Leadership Program" },
+    { year: "2025", name: "Winnie Nafula", award: "Harvard Women Leadership Program" },
+    { year: "2025", name: "Unah Odhiambo", award: "Harvard Women Leadership Program" },
+    { year: "2026", name: "Ashley Obondo", award: "Assets Noviams" },
+    { year: "2026", name: "Maseka Kithinji", award: "Boeing Flight Training Scholarship" },
+    { year: "2026", name: "Margert Ngugi", award: "Diane Ballweg Scholarship" },
+];
+
+const milestones = [
+    { year: "2011", title: "The Beginning", desc: "Co-founded by Fiona Omondi and Una Gertrude after discovering WAI in an aviation classroom." },
+    { year: "2012", title: "First Membership Drive", desc: "Partnered with EASA to host the official launch event with industry support." },
+    { year: "2014", title: "Wilson Airport Airshow", desc: "Greatly increased Chapter visibility with a dedicated exhibition booth." },
+    { year: "2015", title: "First GIAD Kenya", desc: "Hosted at Kenya Airways Pride Centre flight simulator, reaching girls across Nairobi." },
+    { year: "2023", title: "Africa Ambassador", desc: "Fiona Omondi appointed WAI International Ambassador for Africa." },
+    { year: "2024", title: "Girls Air Show", desc: "Partnered with GIAA to host the first Girls Air Show in August 2024." },
 ];
 
 type Pioneer = { name: string; note: string; };
@@ -103,6 +153,13 @@ export default async function AboutPage() {
             <main>
 
                 {/* ── HERO ── */}
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    @media (max-width: 768px) {
+                        .hide-mb { display: none !important; }
+                        .full-width-mb { width: 100% !important; }
+                    }
+                ` }} />
                 <section
                     style={{
                         background: "linear-gradient(135deg, var(--teal-deep) 0%, var(--teal) 100%)",
@@ -221,25 +278,13 @@ export default async function AboutPage() {
                                     <span style={{ color: "var(--teal)" }}>Rooted in Kenya</span>
                                 </h2>
                                 <p style={{ color: "var(--text-body)", lineHeight: 1.85, marginBottom: "1.4rem", fontSize: "1rem" }}>
-                                    Women in Aviation International is a nonprofit organisation dedicated to
-                                    the encouragement and advancement of women in all aviation career fields
-                                    and interests. Our diverse membership includes astronauts, corporate pilots,
-                                    maintenance technicians, air traffic controllers, business owners, educators,
-                                    journalists, flight attendants, high school and university students, air show
-                                    performers, airport managers and many others.
+                                    Women in Aviation International (WAI) Kenya Chapter is a non-profit organization co-founded in <strong>2011</strong> by <strong>Ms. Fiona Omondi</strong> and <strong>Ms. Una Gertrude</strong>. The idea originated in an aviation classroom at the East Africa School of Aviation (EASA), motivated by the impact of WAI globally and a desire to create a local community that could provide more opportunities for Kenyan women in aerospace.
                                 </p>
                                 <p style={{ color: "var(--text-body)", lineHeight: 1.85, marginBottom: "1.4rem", fontSize: "1rem" }}>
-                                    We provide year-round resources to assist women in aviation and to encourage
-                                    young women to consider aviation as a career. WAI also offers educational
-                                    outreach programmes to educators, aviation industry members, and young people
-                                    nationally and internationally. Our most recent initiative is our <strong>Girls in
-                                        Aviation Day</strong> programme for girls ages 8 to 17.
+                                    Despite limited resources at inception, the Chapter rallied industry support and hosted its first membership drive in <strong>April 2012</strong>. This milestone was followed by <strong>Hon. John Omondi</strong> agreeing to serve as Patron, consistently supporting the career development of young women in aeronautical engineering.
                                 </p>
                                 <p style={{ color: "var(--text-body)", lineHeight: 1.85, fontSize: "1rem" }}>
-                                    In addition, WAI promotes public understanding of the accomplishments and
-                                    contributions of women in aviation — including historic notables such as
-                                    Amelia Earhart, Bessie Coleman, Eileen Collins, Jeana Yeager and Nicole
-                                    Malachowski — through our WAI Pioneer Hall of Fame programme.
+                                    The involvement of <strong>Captain Mary Mukulu Kai</strong> (then a Kenya Airways pilot) as Guest of Honor during the inaugural drive established the groundwork for ongoing mentorship and industry collaboration. Captain Kai now serves as the <strong>President</strong> of the WAI–Kenya Chapter.
                                 </p>
                             </div>
 
@@ -333,68 +378,150 @@ export default async function AboutPage() {
                     </div>
                 </section>
 
-                {/* ── MISSION PILLARS ── */}
+                {/* ── MILESTONES TIMELINE ── */}
+                <section style={{ padding: "8rem 0", background: "white" }}>
+                    <div className="container">
+                        <div style={{ textAlign: "center", marginBottom: "5rem" }}>
+                            <Label text="Journey & Impact" />
+                            <h2 className="section-title">Our Growth Story</h2>
+                        </div>
+
+                        <div style={{ position: "relative", maxWidth: 900, margin: "0 auto" }}>
+                            {/* Vertical line for desktop */}
+                            <div style={{
+                                position: "absolute", left: "50%", top: 0, bottom: 0,
+                                width: 2, background: "#edf0f3", transform: "translateX(-50%)",
+                                display: "block"
+                            }} className="hide-mb" />
+
+                            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+                                {milestones.map((m, i) => (
+                                    <div key={m.year} style={{
+                                        display: "flex",
+                                        justifyContent: i % 2 === 0 ? "flex-end" : "flex-start",
+                                        width: "100%",
+                                        position: "relative"
+                                    }}>
+                                        {/* Dot */}
+                                        <div style={{
+                                            position: "absolute", left: "50%", top: "1.5rem",
+                                            width: 16, height: 16, borderRadius: "50%",
+                                            background: i % 2 === 0 ? "var(--teal)" : "var(--gold)",
+                                            border: "4px solid white",
+                                            transform: "translateX(-50%)",
+                                            zIndex: 2
+                                        }} className="hide-mb" />
+
+                                        <div style={{
+                                            width: "45%",
+                                            background: "var(--off-white)",
+                                            padding: "2rem",
+                                            borderRadius: 6,
+                                            boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+                                            borderLeft: i % 2 === 0 ? "none" : `4px solid var(--gold)`,
+                                            borderRight: i % 2 === 0 ? `4px solid var(--teal)` : "none",
+                                        }} className="full-width-mb">
+                                            <p style={{ fontSize: "1.2rem", fontWeight: 900, color: i % 2 === 0 ? "var(--teal)" : "var(--gold)", marginBottom: "0.25rem" }}>{m.year}</p>
+                                            <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--teal-deep)", marginBottom: "0.5rem" }}>{m.title}</h3>
+                                            <p style={{ color: "var(--text-body)", fontSize: "0.93rem", lineHeight: 1.6 }}>{m.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── SCHOLARSHIP RECIPIENTS ── */}
                 <section style={{ padding: "8rem 0", background: "var(--off-white)" }}>
                     <div className="container">
                         <div style={{ textAlign: "center", marginBottom: "5rem" }}>
-                            <p
-                                style={{
-                                    fontSize: "0.75rem",
-                                    fontWeight: 700,
-                                    textTransform: "uppercase",
-                                    letterSpacing: "3px",
-                                    color: "var(--teal)",
-                                    marginBottom: "0.75rem",
-                                }}
-                            >
-                                What We Do
+                            <Label text="Success Stories" />
+                            <h2 className="section-title">Scholarship & Award Recipients</h2>
+                            <p style={{ color: "var(--text-body)", maxWidth: 640, margin: "1rem auto 0", lineHeight: 1.7 }}>
+                                Our members have successfully competed for numerous WAI global scholarships,
+                                developing technical training, leadership skills, and professional excellence.
                             </p>
-                            <h2
-                                style={{
-                                    fontSize: "2.5rem",
-                                    fontWeight: 800,
-                                    color: "var(--teal-deep)",
-                                    letterSpacing: "-1px",
-                                }}
-                            >
-                                Our Mission Pillars
-                            </h2>
                         </div>
 
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-                                gap: "1.75rem",
-                            }}
-                        >
-                            {pillars.map((p, i) => (
-                                <div
-                                    key={p.title}
-                                    style={{
-                                        background: "white",
-                                        borderRadius: 6,
-                                        padding: "2.5rem 2rem",
-                                        borderTop: `3px solid ${i % 2 === 0 ? "var(--teal)" : "var(--gold)"}`,
-                                        boxShadow: "0 4px 24px rgba(0,0,0,0.05)",
-                                    }}
-                                >
-                                    <div style={{ marginBottom: "1.25rem", color: i % 2 === 0 ? "var(--teal)" : "var(--gold)" }}><p.Icon size={32} strokeWidth={1.75} /></div>
-                                    <h3
-                                        style={{
-                                            fontSize: "1.1rem",
-                                            fontWeight: 800,
-                                            color: "var(--teal-deep)",
-                                            marginBottom: "0.85rem",
-                                        }}
-                                    >
-                                        {p.title}
-                                    </h3>
-                                    <p style={{ color: "var(--text-body)", lineHeight: 1.75, fontSize: "0.93rem" }}>
-                                        {p.body}
-                                    </p>
+                        <div style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                            gap: "1.5rem"
+                        }}>
+                            {scholarshipRecipients.map((s, i) => (
+                                <div key={i} style={{
+                                    background: "white",
+                                    padding: "1.5rem",
+                                    borderRadius: 6,
+                                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+                                    display: "flex",
+                                    gap: "1.25rem",
+                                    alignItems: "center"
+                                }}>
+                                    <div style={{
+                                        width: 44, height: 44, borderRadius: "50%",
+                                        background: "var(--off-white)", color: "var(--gold)",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        flexShrink: 0, fontWeight: 800, fontSize: "0.75rem"
+                                    }}>
+                                        {s.year}
+                                    </div>
+                                    <div>
+                                        <h4 style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--teal-deep)" }}>{s.name}</h4>
+                                        <p style={{ fontSize: "0.8rem", color: "var(--text-body)", opacity: 0.8 }}>{s.award}</p>
+                                    </div>
                                 </div>
                             ))}
+                        </div>
+
+                        {/* Recent leadership note */}
+                        <div style={{
+                            marginTop: "4rem",
+                            background: "white",
+                            padding: "3rem",
+                            borderRadius: 6,
+                            textAlign: "center",
+                            border: "1px solid #edf0f3"
+                        }}>
+                            <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--teal-deep)", marginBottom: "1rem" }}>Harvard Leadership Program</h3>
+                            <p style={{ color: "var(--text-body)", lineHeight: 1.7, maxWidth: 700, margin: "0 auto" }}>
+                                Recipient list includes <strong>Emily Manduku (2023)</strong>, <strong>Fiona Omondi (2023)</strong>, <strong>Loise Mwangi (2024)</strong>, <strong>Winnie Nafula (2025)</strong>, and <strong>Unah Odhiambo (2025)</strong>. This program tracks selected members worldwide to improve leadership skills and professional influence.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── PROFESSIONAL DEVELOPMENT & OUTREACH ── */}
+                <section style={{ padding: "8rem 0", background: "white" }}>
+                    <div className="container">
+                        <div className="grid-2" style={{ gap: "6rem", alignItems: "center" }}>
+                            <div>
+                                <Label text="Advocacy & Outreach" />
+                                <h2 className="section-title">Beyond Scholarships</h2>
+                                <p style={{ color: "var(--text-body)", lineHeight: 1.85, marginBottom: "1.5rem" }}>
+                                    In <strong>2023</strong>, the Chapter hosted a session at the Aero Club focused on emotional intelligence. By <strong>2024</strong>, AirKenya Express Ltd sponsored our International Women&rsquo;s Day event, featuring industry leaders like Eng. Liz Aluvanze, CEO of KAAO.
+                                </p>
+                                <p style={{ color: "var(--text-body)", lineHeight: 1.85, marginBottom: "1.5rem" }}>
+                                    Looking to the future, we plan to expand **Girls in Aviation Day (GIAD)** beyond Nairobi to counties with airport facilities, increasing access and introducing more girls to the full range of aerospace careers.
+                                </p>
+                                <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>
+                                    We also partner locally and internationally, such as our <strong>2024 Girls Air Show</strong> collaboration with Girls in Aviation Africa (GIAA), led by Ms. Maseka Githinji.
+                                </p>
+                            </div>
+                            <div style={{
+                                position: "relative",
+                                padding: "3rem",
+                                background: "var(--teal-deep)",
+                                borderRadius: 6,
+                                color: "white"
+                            }}>
+                                <Users size={48} style={{ color: "var(--gold)", marginBottom: "1.5rem" }} />
+                                <h3 style={{ fontSize: "1.4rem", fontWeight: 800, marginBottom: "1.25rem" }}>Empowering the Future</h3>
+                                <p style={{ opacity: 0.8, lineHeight: 1.7, fontSize: "0.97rem" }}>
+                                    &ldquo;Through mentorship, partnerships, and skills development, we continue to strengthen our core mission: enhancing the representation and leadership of women in aviation in Kenya.&rdquo;
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </section>
