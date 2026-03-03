@@ -108,14 +108,14 @@ async function getEvents(): Promise<Event[]> {
                 id: item.slug || String(item.id),
                 title: item.title?.rendered || "Event",
                 hashtags: item.meta?.hashtags ? item.meta.hashtags.split(',').map((h: string) => h.trim()) : [],
-                date: item.meta?.event_date || "",
+                date: item.meta?.event_date || "", // Will now come as YYYY-MM-DD
                 venue: item.meta?.venue || "",
                 category: item.meta?.category as "Girls in Aviation" | "Conference" | "Outreach",
                 edition: item.meta?.edition || "",
                 description: paragraphs,
                 highlights: item.meta?.highlights ? item.meta.highlights.split(',').map((h: string) => h.trim()) : [],
                 link: item.meta?.external_url || "",
-                past: true,
+                past: false, // Calculated later
             };
         });
     } catch (error) {
@@ -136,8 +136,232 @@ const categoryBg: Record<Event["category"], string> = {
     "Outreach": "rgba(124,92,191,0.1)",
 };
 
+type ProcessedEvent = Event & { past: boolean; dateDisplay: string };
+
+function EventCard({ event, index, isUpcoming = false }: { event: ProcessedEvent, index: number, isUpcoming?: boolean }) {
+    return (
+        <div
+            className="grid-sidebar"
+            style={{
+                gap: 0,
+                background: "white",
+                borderRadius: 6,
+                overflow: "hidden",
+                boxShadow: "0 4px 28px rgba(0,0,0,0.07)",
+                border: "1px solid #edf0f3",
+            }}
+        >
+            {/* Left — date panel */}
+            <div
+                style={{
+                    background: isUpcoming
+                        ? "linear-gradient(160deg, var(--gold), #dcb95e)"
+                        : index === 0
+                            ? "linear-gradient(160deg, var(--teal-deep), var(--teal))"
+                            : index === 1
+                                ? "linear-gradient(160deg, #1a2a4a, #2a4a7a)"
+                                : "linear-gradient(160deg, var(--teal), #1a8a9a)",
+                    padding: "2.5rem 1.75rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    color: isUpcoming ? "var(--teal-deep)" : "white",
+                    position: "relative",
+                    overflow: "hidden",
+                }}
+            >
+                {/* Background circle decoration */}
+                <div style={{
+                    position: "absolute", width: 140, height: 140, borderRadius: "50%",
+                    background: isUpcoming ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)", bottom: -40, right: -40,
+                    pointerEvents: "none",
+                }} />
+
+                {/* Category badge */}
+                <span style={{
+                    background: isUpcoming ? "var(--teal-deep)" : categoryColor[event.category],
+                    color: isUpcoming ? "var(--gold)" : "white",
+                    fontSize: "0.6rem",
+                    fontWeight: 800,
+                    letterSpacing: "1.5px",
+                    textTransform: "uppercase",
+                    padding: "0.3rem 0.7rem",
+                    borderRadius: "100px",
+                    alignSelf: "flex-start",
+                    marginBottom: "1.25rem",
+                }}>
+                    {event.category}
+                </span>
+
+                {/* Date */}
+                <div>
+                    {event.edition && (
+                        <p style={{
+                            fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase",
+                            letterSpacing: "1.5px", color: isUpcoming ? "var(--teal-deep)" : "var(--gold)", marginBottom: "0.5rem",
+                        }}>
+                            {event.edition}
+                        </p>
+                    )}
+                    <p style={{ fontSize: "0.82rem", lineHeight: 1.6, opacity: 0.9 }}>
+                        {event.dateDisplay}
+                    </p>
+                </div>
+
+                {/* Status badge */}
+                <span style={{
+                    marginTop: "1.25rem",
+                    fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase",
+                    letterSpacing: "1.5px", color: isUpcoming ? "rgba(0,0,0,0.55)" : "rgba(255,255,255,0.55)",
+                    borderTop: isUpcoming ? "1px solid rgba(0,0,0,0.15)" : "1px solid rgba(255,255,255,0.15)",
+                    paddingTop: "1rem",
+                }}>
+                    {isUpcoming ? (
+                        <><Calendar size={13} style={{ display: "inline", marginRight: 4, verticalAlign: "middle", position: "relative", top: -1 }} /> Upcoming</>
+                    ) : (
+                        <><CheckCheck size={13} style={{ display: "inline", marginRight: 4, verticalAlign: "middle", position: "relative", top: -1 }} /> Past Event</>
+                    )}
+                </span>
+            </div>
+
+            {/* Right — content */}
+            <div style={{ padding: "2.5rem 3rem" }}>
+                {/* Hashtags */}
+                {event.hashtags && event.hashtags.length > 0 && (
+                    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+                        {event.hashtags.map((tag) => (
+                            <span key={tag} style={{
+                                fontSize: "0.72rem", fontWeight: 700, color: categoryColor[event.category],
+                                background: categoryBg[event.category],
+                                padding: "0.25rem 0.7rem", borderRadius: "100px",
+                            }}>
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                <h3 style={{
+                    fontSize: "1.5rem", fontWeight: 900, color: "var(--teal-deep)",
+                    letterSpacing: "-0.5px", marginBottom: "0.75rem", lineHeight: 1.25,
+                }}>
+                    {event.title}
+                </h3>
+
+                {/* Venue */}
+                <div style={{
+                    display: "flex", alignItems: "center", gap: "0.5rem",
+                    marginBottom: "1.5rem",
+                }}>
+                    <MapPin size={15} color="var(--teal)" strokeWidth={2} />
+                    <p style={{
+                        fontSize: "0.82rem", color: "var(--text-body)",
+                        fontWeight: 600,
+                    }}>
+                        {event.venue}
+                    </p>
+                </div>
+
+                {/* Description */}
+                {event.description.map((para, i) => (
+                    <p key={i} style={{
+                        color: "var(--text-body)", lineHeight: 1.8, fontSize: "0.93rem",
+                        marginBottom: "0.85rem",
+                    }}>
+                        {para}
+                    </p>
+                ))}
+
+                {/* Highlights pills */}
+                {event.highlights && event.highlights.length > 0 && (
+                    <div style={{ marginTop: "1.5rem" }}>
+                        <p style={{
+                            fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase",
+                            letterSpacing: "2px", color: "var(--teal)", marginBottom: "0.75rem",
+                        }}>
+                            Event Highlights
+                        </p>
+                        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                            {event.highlights.map((h) => (
+                                <span key={h} style={{
+                                    background: "var(--off-white)",
+                                    color: "var(--teal-deep)",
+                                    fontSize: "0.78rem",
+                                    fontWeight: 600,
+                                    padding: "0.35rem 0.9rem",
+                                    borderRadius: "100px",
+                                    border: "1px solid #dce8ea",
+                                }}>
+                                    {h}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {event.link && (
+                    <div style={{ marginTop: "2rem" }}>
+                        <a href={event.link} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
+                            {isUpcoming ? <Ticket size={18} /> : <Globe size={18} />}
+                            {isUpcoming ? "Register Now" : "View Event Website"}
+                        </a>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
 export default async function EventsPage() {
-    const events = await getEvents();
+    const rawEvents = await getEvents();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Format YYYY-MM-DD into a human-readable string
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "TBD";
+        // Check if it matches YYYY-MM-DD (CMS Date Picker format)
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+        return dateString; // Fallback for old legacy text inputs
+    };
+
+    // Calculate Past vs Upcoming and map nice date strings
+    const processedEvents = rawEvents.map(event => {
+        let isPast = true;
+        if (event.date) {
+            if (/^\d{4}-\d{2}-\d{2}$/.test(event.date)) {
+                // Determine using Date Object
+                const eventDate = new Date(event.date);
+                isPast = eventDate < today;
+            } else {
+                // If it's a legacy string like "Saturday, 26 September 2020", assume it's past
+                isPast = true;
+            }
+        }
+        return {
+            ...event,
+            past: isPast,
+            dateDisplay: formatDate(event.date)
+        };
+    });
+
+    const upcomingEvents = processedEvents.filter(e => !e.past).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const pastEvents = processedEvents.filter(e => e.past).sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        // If legacy string logic prevents parsing, default to maintaining order
+        if (isNaN(dateA) || isNaN(dateB)) return 0;
+        return dateB - dateA; // Newest past events first
+    });
 
     return (
         <>
@@ -201,6 +425,40 @@ export default async function EventsPage() {
                     </div>
                 </section>
 
+                {/* ── UPCOMING EVENTS ── */}
+                {upcomingEvents.length > 0 && (
+                    <section style={{ padding: "8rem 0", background: "white" }}>
+                        <div className="container">
+
+                            {/* Section header */}
+                            <div style={{ marginBottom: "5rem" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.75rem" }}>
+                                    <div style={{ width: 36, height: 3, background: "var(--gold)", borderRadius: 2 }} />
+                                    <p style={{
+                                        fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase",
+                                        letterSpacing: "3px", color: "var(--gold)",
+                                    }}>
+                                        Save the Date
+                                    </p>
+                                </div>
+                                <h2 style={{
+                                    fontSize: "2.5rem", fontWeight: 800, color: "var(--teal-deep)",
+                                    letterSpacing: "-1px",
+                                }}>
+                                    Upcoming Events
+                                </h2>
+                            </div>
+
+                            {/* Timeline-style event list */}
+                            <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
+                                {upcomingEvents.map((event, index) => (
+                                    <EventCard key={event.id} event={event} index={index} isUpcoming />
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
                 {/* ── PAST EVENTS ── */}
                 <section style={{ padding: "8rem 0", background: "var(--off-white)" }}>
                     <div className="container">
@@ -226,253 +484,16 @@ export default async function EventsPage() {
 
                         {/* Timeline-style event list */}
                         <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
-                            {events.map((event, index) => (
-                                <div
-                                    key={event.id}
-                                    className="grid-sidebar"
-                                    style={{
-                                        gap: 0,
-                                        background: "white",
-                                        borderRadius: 6,
-                                        overflow: "hidden",
-                                        boxShadow: "0 4px 28px rgba(0,0,0,0.07)",
-                                        border: "1px solid #edf0f3",
-                                    }}
-                                >
-                                    {/* Left — date panel */}
-                                    <div
-                                        style={{
-                                            background: index === 0
-                                                ? "linear-gradient(160deg, var(--teal-deep), var(--teal))"
-                                                : index === 1
-                                                    ? "linear-gradient(160deg, #1a2a4a, #2a4a7a)"
-                                                    : "linear-gradient(160deg, var(--teal), #1a8a9a)",
-                                            padding: "2.5rem 1.75rem",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "space-between",
-                                            color: "white",
-                                            position: "relative",
-                                            overflow: "hidden",
-                                        }}
-                                    >
-                                        {/* Background circle decoration */}
-                                        <div style={{
-                                            position: "absolute", width: 140, height: 140, borderRadius: "50%",
-                                            background: "rgba(255,255,255,0.05)", bottom: -40, right: -40,
-                                            pointerEvents: "none",
-                                        }} />
-
-                                        {/* Category badge */}
-                                        <span style={{
-                                            background: categoryColor[event.category],
-                                            color: "white",
-                                            fontSize: "0.6rem",
-                                            fontWeight: 800,
-                                            letterSpacing: "1.5px",
-                                            textTransform: "uppercase",
-                                            padding: "0.3rem 0.7rem",
-                                            borderRadius: "100px",
-                                            alignSelf: "flex-start",
-                                            marginBottom: "1.25rem",
-                                        }}>
-                                            {event.category}
-                                        </span>
-
-                                        {/* Date */}
-                                        <div>
-                                            {event.edition && (
-                                                <p style={{
-                                                    fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase",
-                                                    letterSpacing: "1.5px", color: "var(--gold)", marginBottom: "0.5rem",
-                                                }}>
-                                                    {event.edition}
-                                                </p>
-                                            )}
-                                            <p style={{ fontSize: "0.82rem", lineHeight: 1.6, opacity: 0.9 }}>
-                                                {event.date}
-                                            </p>
-                                        </div>
-
-                                        {/* Past badge */}
-                                        <span style={{
-                                            marginTop: "1.25rem",
-                                            fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase",
-                                            letterSpacing: "1.5px", color: "rgba(255,255,255,0.55)",
-                                            borderTop: "1px solid rgba(255,255,255,0.15)",
-                                            paddingTop: "1rem",
-                                        }}>
-                                            <CheckCheck size={13} style={{ display: "inline", marginRight: 4, verticalAlign: "middle" }} /> Past Event
-                                        </span>
-                                    </div>
-
-                                    {/* Right — content */}
-                                    <div style={{ padding: "2.5rem 3rem" }}>
-                                        {/* Hashtags */}
-                                        {event.hashtags && (
-                                            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
-                                                {event.hashtags.map((tag) => (
-                                                    <span key={tag} style={{
-                                                        fontSize: "0.72rem", fontWeight: 700, color: categoryColor[event.category],
-                                                        background: categoryBg[event.category],
-                                                        padding: "0.25rem 0.7rem", borderRadius: "100px",
-                                                    }}>
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        <h3 style={{
-                                            fontSize: "1.5rem", fontWeight: 900, color: "var(--teal-deep)",
-                                            letterSpacing: "-0.5px", marginBottom: "0.75rem", lineHeight: 1.25,
-                                        }}>
-                                            {event.title}
-                                        </h3>
-
-                                        {/* Venue */}
-                                        <div style={{
-                                            display: "flex", alignItems: "center", gap: "0.5rem",
-                                            marginBottom: "1.5rem",
-                                        }}>
-                                            <MapPin size={15} color="var(--teal)" strokeWidth={2} />
-                                            <p style={{
-                                                fontSize: "0.82rem", color: "var(--text-body)",
-                                                fontWeight: 600,
-                                            }}>
-                                                {event.venue}
-                                            </p>
-                                        </div>
-
-                                        {/* Description */}
-                                        {event.description.map((para, i) => (
-                                            <p key={i} style={{
-                                                color: "var(--text-body)", lineHeight: 1.8, fontSize: "0.93rem",
-                                                marginBottom: "0.85rem",
-                                            }}>
-                                                {para}
-                                            </p>
-                                        ))}
-
-                                        {/* Highlights pills */}
-                                        {event.highlights && (
-                                            <div style={{ marginTop: "1.5rem" }}>
-                                                <p style={{
-                                                    fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase",
-                                                    letterSpacing: "2px", color: "var(--teal)", marginBottom: "0.75rem",
-                                                }}>
-                                                    Event Highlights
-                                                </p>
-                                                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                                                    {event.highlights.map((h) => (
-                                                        <span key={h} style={{
-                                                            background: "var(--off-white)",
-                                                            color: "var(--teal-deep)",
-                                                            fontSize: "0.78rem",
-                                                            fontWeight: 600,
-                                                            padding: "0.35rem 0.9rem",
-                                                            borderRadius: "100px",
-                                                            border: "1px solid #dce8ea",
-                                                        }}>
-                                                            {h}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {event.link && (
-                                            <div style={{ marginTop: "2rem" }}>
-                                                <a href={event.link} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
-                                                    <Globe size={18} /> View Event Website
-                                                </a>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                            {pastEvents.map((event, index) => (
+                                <EventCard key={event.id} event={event} index={index} />
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* ── UPCOMING EVENTS PLACEHOLDER ── */}
-                <section style={{ padding: "8rem 0", background: "white" }}>
-                    <div className="container">
-                        <div style={{ textAlign: "center", marginBottom: "4rem" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "1rem", justifyContent: "center", marginBottom: "0.75rem" }}>
-                                <div style={{ width: 36, height: 3, background: "var(--gold)", borderRadius: 2 }} />
-                                <p style={{
-                                    fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase",
-                                    letterSpacing: "3px", color: "var(--teal)",
-                                }}>
-                                    Coming Soon
-                                </p>
-                                <div style={{ width: 36, height: 3, background: "var(--gold)", borderRadius: 2 }} />
-                            </div>
-                            <h2 style={{
-                                fontSize: "2.5rem", fontWeight: 800, color: "var(--teal-deep)",
-                                letterSpacing: "-1px", marginBottom: "1rem",
-                            }}>
-                                Upcoming Events
-                            </h2>
-                            <p style={{ color: "var(--text-body)", maxWidth: 520, margin: "0 auto", lineHeight: 1.7 }}>
-                                Our next event is currently being planned. Check back soon or
-                                subscribe to stay informed about our upcoming Girls in Aviation Day
-                                and other WAI Kenya Chapter events.
-                            </p>
-                        </div>
-
-                        {/* Placeholder card */}
-                        <div
-                            style={{
-                                maxWidth: 680,
-                                margin: "0 auto",
-                                background: "var(--off-white)",
-                                borderRadius: 6,
-                                border: "2px dashed #b8d0d6",
-                                padding: "4rem",
-                                textAlign: "center",
-                            }}
-                        >
-                            <div style={{
-                                width: 72, height: 72, borderRadius: "50%",
-                                background: "linear-gradient(135deg, var(--teal-deep), var(--teal))",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                margin: "0 auto 1.75rem", color: "white",
-                            }}>
-                                <Calendar size={32} strokeWidth={1.75} />
-                            </div>
-                            <h3 style={{
-                                fontSize: "1.4rem", fontWeight: 800, color: "var(--teal-deep)",
-                                marginBottom: "0.75rem",
-                            }}>
-                                Girls in Aviation Day — Coming Soon
-                            </h3>
-                            <p style={{
-                                color: "var(--text-body)", lineHeight: 1.7, maxWidth: 420,
-                                margin: "0 auto 2rem", fontSize: "0.93rem",
-                            }}>
-                                Stay connected to be the first to know when we announce our next
-                                event date, venue and theme.
-                            </p>
-                            <Link
-                                href="/contact"
-                                style={{
-                                    display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                                    background: "linear-gradient(135deg, var(--teal-deep), var(--teal))",
-                                    color: "white", padding: "0.9rem 2.2rem",
-                                    fontWeight: 700, fontSize: "0.9rem", borderRadius: 4,
-                                    textDecoration: "none",
-                                }}
-                            >
-                                Get Notified →
-                            </Link>
-                        </div>
-                    </div>
-                </section>
 
                 {/* ── GIRLS IN AVIATION DAY BANNER ── */}
-                <section
+                < section
                     style={{
                         background: "var(--gold)",
                         padding: "6rem 0",
@@ -571,10 +592,10 @@ export default async function EventsPage() {
                             ))}
                         </div>
                     </div>
-                </section>
+                </section >
 
                 {/* ── CTA ── */}
-                <section style={{ background: "var(--teal-deep)", padding: "7rem 0", textAlign: "center" }}>
+                < section style={{ background: "var(--teal-deep)", padding: "7rem 0", textAlign: "center" }}>
                     <div className="container">
                         <p style={{
                             fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase",
@@ -611,7 +632,7 @@ export default async function EventsPage() {
                             </Link>
                         </div>
                     </div>
-                </section>
+                </section >
 
             </main >
             <Footer />

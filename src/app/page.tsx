@@ -71,8 +71,52 @@ async function getPartners(): Promise<Partner[] | undefined> {
   }
 }
 
+type UpcomingEvent = {
+  title: string;
+  dateDisplay: string;
+  link: string;
+};
+
+async function getUpcomingEvent(): Promise<UpcomingEvent | undefined> {
+  const baseUrl = process.env.NEXT_PUBLIC_WP_API_URL;
+  if (!baseUrl) return undefined;
+  try {
+    const res = await fetch(`${baseUrl}/wai_event?_embed&per_page=100`, { next: { revalidate: 60 } });
+    if (!res.ok) return undefined;
+    const data = await res.json();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingEvents = data.filter((item: any) => {
+      const dateStr = item.meta?.event_date;
+      if (!dateStr || !(/^\d{4}-\d{2}-\d{2}$/.test(dateStr))) return false;
+      return new Date(dateStr) >= today;
+    });
+
+    if (upcomingEvents.length === 0) return undefined;
+
+    // Sort to get the nearest upcoming event
+    upcomingEvents.sort((a: any, b: any) => new Date(a.meta.event_date).getTime() - new Date(b.meta.event_date).getTime());
+
+    const nextEvent = upcomingEvents[0];
+    const dateObj = new Date(nextEvent.meta.event_date);
+
+    return {
+      title: nextEvent.title?.rendered || "Upcoming Event",
+      dateDisplay: dateObj.toLocaleDateString('en-GB', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      }),
+      link: nextEvent.meta?.external_url || "/events",
+    };
+  } catch {
+    return undefined;
+  }
+}
+
 export default async function Home() {
   const partners = await getPartners();
+  const upcomingEvent = await getUpcomingEvent();
 
   return (
     <>
@@ -80,7 +124,7 @@ export default async function Home() {
 
       <main>
         {/* ── 1. HERO SLIDER ─────────────────────────── */}
-        <HeroSlider />
+        <HeroSlider upcomingEvent={upcomingEvent} />
 
         {/* ── 2. QUICK INTRO BAR ────────────────────── */}
         <section style={{ background: "var(--teal)", padding: "2.5rem 0" }}>

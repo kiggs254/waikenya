@@ -32,17 +32,35 @@ const slides = [
     },
 ];
 
-export default function HeroSlider() {
+type UpcomingEvent = {
+    title: string;
+    dateDisplay: string;
+    link: string;
+};
+
+export default function HeroSlider({ upcomingEvent }: { upcomingEvent?: UpcomingEvent }) {
     const [current, setCurrent] = useState(0);
     const [progress, setProgress] = useState(0);
 
+    const dynamicSlides = [...slides];
+    if (upcomingEvent) {
+        dynamicSlides.unshift({
+            label: "Save the Date — " + upcomingEvent.dateDisplay,
+            title: upcomingEvent.title,
+            desc: "We are thrilled to announce our next major event! Make sure to register to secure your spot.",
+            img: "/images/girls_aviation.png", // Reusing standard stock image
+            cta: { text: "Register Now", href: upcomingEvent.link },
+            cta2: { text: "All Events", href: "/events" },
+        });
+    }
+
     const next = useCallback(() => {
-        setCurrent((c) => (c + 1) % slides.length);
+        setCurrent((c) => (c + 1) % dynamicSlides.length);
         setProgress(0);
-    }, []);
+    }, [dynamicSlides.length]);
 
     const prev = () => {
-        setCurrent((c) => (c - 1 + slides.length) % slides.length);
+        setCurrent((c) => (c - 1 + dynamicSlides.length) % dynamicSlides.length);
         setProgress(0);
     };
 
@@ -60,7 +78,7 @@ export default function HeroSlider() {
                 className={styles.track}
                 style={{ transform: `translateX(-${current * 100}%)` }}
             >
-                {slides.map((slide, i) => (
+                {dynamicSlides.map((slide, i) => (
                     <div key={i} className={styles.slide}>
                         <div className={styles.bg}>
                             <Image src={slide.img} alt={slide.title} fill priority={i === 0} />
@@ -88,7 +106,7 @@ export default function HeroSlider() {
 
             {/* Dot Controls */}
             <div className={styles.controls}>
-                {slides.map((_, i) => (
+                {dynamicSlides.map((_, i) => (
                     <button
                         key={i}
                         className={`${styles.dot} ${i === current ? styles.active : ""}`}
