@@ -97,16 +97,17 @@ export default function PartnerCarousel({ partners = defaultPartners }: { partne
                         <li key={i} style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <div
                                 style={{
-                                    width: 160,
-                                    height: 80,
+                                    width: 250,
+                                    height: 125,
                                     background: "rgba(8, 46, 58, 0.03)",
                                     border: "1px solid rgba(8, 46, 58, 0.06)",
                                     borderRadius: 6,
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    padding: "1rem",
+                                    padding: "0.25rem",
                                     position: "relative",
+                                    overflow: "hidden",
                                     transition: "all 0.3s ease",
                                 }}
                             >
@@ -114,9 +115,9 @@ export default function PartnerCarousel({ partners = defaultPartners }: { partne
                                     <img
                                         src={p.logoUrl}
                                         alt={p.name}
-                                        width={140}
-                                        height={60}
-                                        style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+                                        width={500}
+                                        height={250}
+                                        style={{ width: "100%", height: "100%", objectFit: "contain" }}
                                     />
                                 ) : (
                                     <span style={{ fontWeight: 800, color: "var(--teal-deep)", opacity: 0.8, fontSize: "0.95rem", textAlign: "center", lineHeight: 1.2 }}>
