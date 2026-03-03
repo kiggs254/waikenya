@@ -43,7 +43,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div style={{ maxWidth: 320 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1.25rem" }}>
-                            <img src="/images/logo-official.png" alt="WAI Kenya Logo" width={60} height={60} />
+                            <img src="/images/logo-white.png" alt="WAI Kenya Logo" width={60} height={60} />
                             <h2
                                 style={{
                                     fontSize: "1.45rem",

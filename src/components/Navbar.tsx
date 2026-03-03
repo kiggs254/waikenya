@@ -21,7 +21,7 @@ export default function Navbar() {
                 {/* Logo: image + text */}
                 <Link href="/" className={styles.logo}>
                     <Image
-                        src="/images/logo-official.png"
+                        src={(scrolled && !menuOpen) ? "/images/logo-black.png" : "/images/logo-white.png"}
                         alt="WAI Kenya Chapter Logo"
                         width={52}
                         height={52}
