@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 
 type Partner = {
     name: string;
@@ -10,14 +9,13 @@ type Partner = {
 };
 
 // Default fallback partners if WP array is empty (or before it's wired)
-// Normally, you would fetch these from /wp-json/wp/v2/wai_partner in a real data-fetching layer
 const defaultPartners: Partner[] = [
-    { name: "Kenya Airways", logoUrl: "/images/partners/kq.png" },
-    { name: "Safaricom", logoUrl: "/images/partners/safaricom.png" },
-    { name: "KCAA", logoUrl: "/images/partners/kcaa.png" },
-    { name: "Boeing", logoUrl: "/images/partners/boeing.png" },
-    { name: "Airbus", logoUrl: "/images/partners/airbus.png" },
-    { name: "Tradewinds Aviation Services", logoUrl: "/images/partners/tradewinds.png" },
+    { name: "Kenya Airways", logoUrl: "" },
+    { name: "Safaricom", logoUrl: "" },
+    { name: "KCAA", logoUrl: "" },
+    { name: "Boeing", logoUrl: "" },
+    { name: "Airbus", logoUrl: "" },
+    { name: "Tradewinds Aviation Services", logoUrl: "" },
 ];
 
 export default function PartnerCarousel({ partners = defaultPartners }: { partners?: Partner[] }) {
@@ -97,7 +95,6 @@ export default function PartnerCarousel({ partners = defaultPartners }: { partne
                 >
                     {partners.map((p, i) => (
                         <li key={i} style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            {/* Fallback styling for when actual logo images aren't present locally yet */}
                             <div
                                 style={{
                                     width: 160,
@@ -113,14 +110,19 @@ export default function PartnerCarousel({ partners = defaultPartners }: { partne
                                     transition: "all 0.3s ease",
                                 }}
                             >
-                                {/* 
-                                   Here one would render <Image src={p.logoUrl} .../>.
-                                   Since we don't have the partner logo files generated yet locally,
-                                   we'll render a beautiful text placeholder instead for now. 
-                                */}
-                                <span style={{ fontWeight: 800, color: "var(--teal-deep)", opacity: 0.8, fontSize: "0.95rem", textAlign: "center", lineHeight: 1.2 }}>
-                                    {p.name}
-                                </span>
+                                {p.logoUrl ? (
+                                    <img
+                                        src={p.logoUrl}
+                                        alt={p.name}
+                                        width={140}
+                                        height={60}
+                                        style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+                                    />
+                                ) : (
+                                    <span style={{ fontWeight: 800, color: "var(--teal-deep)", opacity: 0.8, fontSize: "0.95rem", textAlign: "center", lineHeight: 1.2 }}>
+                                        {p.name}
+                                    </span>
+                                )}
                                 {p.websiteUrl && (
                                     <a
                                         href={p.websiteUrl}

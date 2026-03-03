@@ -133,11 +133,16 @@ async function getPartners(): Promise<Partner[] | undefined> {
         if (!res.ok) return undefined;
         const data = await res.json();
         if (data.length === 0) return undefined;
-        return data.map((item: any) => ({
-            name: item.title?.rendered || "Partner",
-            logoUrl: item.featured_image_url || "",
-            websiteUrl: item.meta?.website_url || "",
-        }));
+        return data.map((item: any) => {
+            const logoUrl = item.featured_image_url
+                || item._embedded?.["wp:featuredmedia"]?.[0]?.source_url
+                || "";
+            return {
+                name: item.title?.rendered || "Partner",
+                logoUrl,
+                websiteUrl: item.meta?.website_url || "",
+            };
+        });
     } catch {
         return undefined;
     }
