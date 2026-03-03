@@ -285,7 +285,7 @@ export default async function TeamPage() {
                         }}
                     >
                         {[
-                            { num: "10", label: "Team Members" },
+                            { num: members.length.toString(), label: "Team Members" },
                             { num: "2012", label: "Chapter Founded" },
                             { num: "500+", label: "Active Members" },
                             { num: "14+", label: "Scholarships Awarded" },
