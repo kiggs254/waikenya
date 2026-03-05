@@ -38,7 +38,7 @@ export default function Navbar() {
                     <Link href="/events" className={styles.link} onClick={() => setMenuOpen(false)}>Events</Link>
                     <Link href="/membership" className={styles.link} onClick={() => setMenuOpen(false)}>Membership</Link>
                     <Link href="/scholarships" className={styles.link} onClick={() => setMenuOpen(false)}>Scholarships</Link>
-                    <Link href="#pioneers" className={styles.link} onClick={() => setMenuOpen(false)}>Hall of Fame</Link>
+                    <Link href="/gallery" className={styles.link} onClick={() => setMenuOpen(false)}>Gallery</Link>
                     <Link href="/contact" className={styles.link} onClick={() => setMenuOpen(false)}>Contact</Link>
                     <Link href="/membership" className={styles.cta}>Join Now</Link>
                 </div>

@@ -408,7 +408,7 @@ export default async function Home() {
         </section>
 
         {/* ── 7. HALL OF FAME ───────────────────────── */}
-        <section id="pioneers" style={{ background: "var(--teal-deep)", padding: "7rem 0", color: "white" }}>
+        <section id="gallery" style={{ background: "var(--teal-deep)", padding: "7rem 0", color: "white" }}>
           <div className="container">
             <div style={{ textAlign: "center", marginBottom: "4rem" }}>
               <p
@@ -425,14 +425,26 @@ export default async function Home() {
                 }}
               >
                 <span style={{ width: 24, height: 2, background: "var(--gold)", display: "inline-block" }} />
-                WAI Pioneer Hall of Fame
+                WAI Kenya Gallery
               </p>
               <h2 style={{ fontSize: "2.8rem", fontWeight: 800, color: "white", letterSpacing: "-1px", marginBottom: "1rem" }}>
                 Women Who Changed the Sky
               </h2>
-              <p style={{ color: "rgba(255,255,255,0.65)", maxWidth: 560, margin: "0 auto" }}>
-                WAI promotes public understanding of the accomplishments and contributions of women in aviation, recognizing historic pioneers through our Hall of Fame.
+              <p style={{ color: "rgba(255,255,255,0.65)", maxWidth: 560, margin: "0 auto 2.5rem" }}>
+                WAI promotes public understanding of the accomplishments and contributions of women in aviation.
+                Browse our gallery of historic and present-day pioneers.
               </p>
+              <Link
+                href="/gallery"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: "0.5rem",
+                  background: "var(--gold)", color: "var(--teal-deep)",
+                  padding: "0.9rem 2.2rem", fontWeight: 700, fontSize: "0.9rem",
+                  borderRadius: 4, textDecoration: "none",
+                }}
+              >
+                View Full Gallery →
+              </Link>
             </div>
 
             <div

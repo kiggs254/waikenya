@@ -22,6 +22,7 @@ type Event = {
     highlights?: string[];
     link?: string;
     past: boolean;
+    featuredImage?: string;
 };
 
 const fallbackEvents: Event[] = [
@@ -116,6 +117,7 @@ async function getEvents(): Promise<Event[]> {
                 highlights: item.meta?.highlights ? item.meta.highlights.split(',').map((h: string) => h.trim()) : [],
                 link: item.meta?.external_url || "",
                 past: false, // Calculated later
+                featuredImage: item.featured_image_url || item._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "",
             };
         });
     } catch (error) {
@@ -151,77 +153,111 @@ function EventCard({ event, index, isUpcoming = false }: { event: ProcessedEvent
                 border: "1px solid #edf0f3",
             }}
         >
-            {/* Left — date panel */}
+            {/* Left — featured image panel */}
             <div
                 style={{
-                    background: isUpcoming
-                        ? "linear-gradient(160deg, var(--gold), #dcb95e)"
-                        : index === 0
-                            ? "linear-gradient(160deg, var(--teal-deep), var(--teal))"
-                            : index === 1
-                                ? "linear-gradient(160deg, #1a2a4a, #2a4a7a)"
-                                : "linear-gradient(160deg, var(--teal), #1a8a9a)",
+                    position: "relative",
+                    minHeight: 280,
+                    overflow: "hidden",
+                    flexShrink: 0,
+                }}
+            >
+                {/* Background: featured image or fallback gradient */}
+                {event.featuredImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                        src={event.featuredImage}
+                        alt={event.title}
+                        style={{
+                            position: "absolute", inset: 0,
+                            width: "100%", height: "100%",
+                            objectFit: "cover",
+                        }}
+                    />
+                ) : (
+                    <div style={{
+                        position: "absolute", inset: 0,
+                        background: isUpcoming
+                            ? "linear-gradient(160deg, var(--gold), #dcb95e)"
+                            : index === 0
+                                ? "linear-gradient(160deg, var(--teal-deep), var(--teal))"
+                                : index === 1
+                                    ? "linear-gradient(160deg, #1a2a4a, #2a4a7a)"
+                                    : "linear-gradient(160deg, var(--teal), #1a8a9a)",
+                    }} />
+                )}
+
+                {/* Dark overlay so text stays readable over photos */}
+                <div style={{
+                    position: "absolute", inset: 0,
+                    background: event.featuredImage
+                        ? "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.25) 60%, transparent 100%)"
+                        : "transparent",
+                }} />
+
+                {/* Content overlay */}
+                <div style={{
+                    position: "relative", zIndex: 2,
                     padding: "2.5rem 1.75rem",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    color: isUpcoming ? "var(--teal-deep)" : "white",
-                    position: "relative",
-                    overflow: "hidden",
-                }}
-            >
-                {/* Background circle decoration */}
-                <div style={{
-                    position: "absolute", width: 140, height: 140, borderRadius: "50%",
-                    background: isUpcoming ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)", bottom: -40, right: -40,
-                    pointerEvents: "none",
-                }} />
-
-                {/* Category badge */}
-                <span style={{
-                    background: isUpcoming ? "var(--teal-deep)" : categoryColor[event.category],
-                    color: isUpcoming ? "var(--gold)" : "white",
-                    fontSize: "0.6rem",
-                    fontWeight: 800,
-                    letterSpacing: "1.5px",
-                    textTransform: "uppercase",
-                    padding: "0.3rem 0.7rem",
-                    borderRadius: "100px",
-                    alignSelf: "flex-start",
-                    marginBottom: "1.25rem",
+                    height: "100%",
+                    color: isUpcoming && !event.featuredImage ? "var(--teal-deep)" : "white",
+                    minHeight: 280,
+                    boxSizing: "border-box",
                 }}>
-                    {event.category}
-                </span>
+                    {/* Category badge */}
+                    <span style={{
+                        background: event.featuredImage ? "rgba(0,0,0,0.45)" : (isUpcoming ? "var(--teal-deep)" : categoryColor[event.category]),
+                        color: isUpcoming && !event.featuredImage ? "var(--gold)" : "white",
+                        fontSize: "0.6rem",
+                        fontWeight: 800,
+                        letterSpacing: "1.5px",
+                        textTransform: "uppercase",
+                        padding: "0.3rem 0.7rem",
+                        borderRadius: "100px",
+                        alignSelf: "flex-start",
+                        marginBottom: "1.25rem",
+                        backdropFilter: event.featuredImage ? "blur(4px)" : undefined,
+                    } as React.CSSProperties}>
+                        {event.category}
+                    </span>
 
-                {/* Date */}
-                <div>
-                    {event.edition && (
-                        <p style={{
-                            fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase",
-                            letterSpacing: "1.5px", color: isUpcoming ? "var(--teal-deep)" : "var(--gold)", marginBottom: "0.5rem",
-                        }}>
-                            {event.edition}
+                    {/* Date */}
+                    <div>
+                        {event.edition && (
+                            <p style={{
+                                fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase",
+                                letterSpacing: "1.5px",
+                                color: event.featuredImage ? "var(--gold)" : (isUpcoming ? "var(--teal-deep)" : "var(--gold)"),
+                                marginBottom: "0.5rem",
+                            }}>
+                                {event.edition}
+                            </p>
+                        )}
+                        <p style={{ fontSize: "0.82rem", lineHeight: 1.6, opacity: 0.9 }}>
+                            {event.dateDisplay}
                         </p>
-                    )}
-                    <p style={{ fontSize: "0.82rem", lineHeight: 1.6, opacity: 0.9 }}>
-                        {event.dateDisplay}
-                    </p>
-                </div>
 
-                {/* Status badge */}
-                <span style={{
-                    marginTop: "1.25rem",
-                    fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase",
-                    letterSpacing: "1.5px", color: isUpcoming ? "rgba(0,0,0,0.55)" : "rgba(255,255,255,0.55)",
-                    borderTop: isUpcoming ? "1px solid rgba(0,0,0,0.15)" : "1px solid rgba(255,255,255,0.15)",
-                    paddingTop: "1rem",
-                }}>
-                    {isUpcoming ? (
-                        <><Calendar size={13} style={{ display: "inline", marginRight: 4, verticalAlign: "middle", position: "relative", top: -1 }} /> Upcoming</>
-                    ) : (
-                        <><CheckCheck size={13} style={{ display: "inline", marginRight: 4, verticalAlign: "middle", position: "relative", top: -1 }} /> Past Event</>
-                    )}
-                </span>
+                        {/* Status badge */}
+                        <span style={{
+                            display: "inline-block",
+                            marginTop: "1rem",
+                            fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase",
+                            letterSpacing: "1.5px",
+                            color: event.featuredImage ? "rgba(255,255,255,0.75)" : (isUpcoming ? "rgba(0,0,0,0.55)" : "rgba(255,255,255,0.55)"),
+                            borderTop: "1px solid rgba(255,255,255,0.2)",
+                            paddingTop: "1rem",
+                        }}>
+                            {isUpcoming ? (
+                                <><Calendar size={13} style={{ display: "inline", marginRight: 4, verticalAlign: "middle", position: "relative", top: -1 }} /> Upcoming</>
+                            ) : (
+                                <><CheckCheck size={13} style={{ display: "inline", marginRight: 4, verticalAlign: "middle", position: "relative", top: -1 }} /> Past Event</>
+                            )}
+                        </span>
+                    </div>
+                </div>
             </div>
 
             {/* Right — content */}
