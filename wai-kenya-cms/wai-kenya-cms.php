@@ -2,14 +2,18 @@
 /**
  * Plugin Name: WAI Kenya Headless CMS
  * Plugin URI:  https://waikenyachapter.com
- * Description: Registers Team, Events, Scholarships, Pioneers, and Partners custom post types, adds admin meta boxes, and exposes the data seamlessly to the WP REST API for the Next.js frontend. Also seeds initial data upon activation.
- * Version:     1.1.0
+ * Description: Registers Team, Events, Scholarships, Pioneers, Partners, and Gallery custom post types, adds admin meta boxes, and exposes data to the WP REST API for the Next.js frontend.
+ * Version:     1.2.0
  * Author:      AI Assistant
  * License:     GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
+}
+
+if ( class_exists( 'WAI_Kenya_Headless_CMS' ) ) {
+    return; // Prevent fatal error if class is already loaded.
 }
 
 class WAI_Kenya_Headless_CMS {
