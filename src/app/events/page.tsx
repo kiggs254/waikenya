@@ -111,7 +111,7 @@ async function getEvents(): Promise<Event[]> {
                 hashtags: item.meta?.hashtags ? item.meta.hashtags.split(',').map((h: string) => h.trim()) : [],
                 date: item.meta?.event_date || "", // Will now come as YYYY-MM-DD
                 venue: item.meta?.venue || "",
-                category: item.meta?.category as "Girls in Aviation" | "Conference" | "Outreach",
+                category: item.meta?.wai_category as "Girls in Aviation" | "Conference" | "Outreach",
                 edition: item.meta?.edition || "",
                 description: paragraphs,
                 highlights: item.meta?.highlights ? item.meta.highlights.split(',').map((h: string) => h.trim()) : [],
