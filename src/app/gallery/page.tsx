@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Images, ImageIcon } from "lucide-react";
+import GalleryClient from "@/components/GalleryClient";
+import { Images } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Gallery | WAI Kenya Chapter",
@@ -150,81 +150,13 @@ export default async function GalleryPage() {
                                             Photo Gallery
                                         </h2>
                                         <p style={{ fontSize: "0.85rem", color: "var(--text-body)", fontWeight: 600 }}>
-                                            {images.length} {images.length === 1 ? "photo" : "photos"}
+                                            {images.length} {images.length === 1 ? "photo" : "photos"} · click any to enlarge
                                         </p>
                                     </div>
                                 </div>
 
-                                {/* Masonry-style CSS grid */}
-                                <div style={{
-                                    columns: "3 280px",
-                                    columnGap: "1.25rem",
-                                }}>
-                                    {images.map((img) => (
-                                        <div
-                                            key={img.id}
-                                            className="gallery-item"
-                                            style={{
-                                                breakInside: "avoid",
-                                                marginBottom: "1.25rem",
-                                                borderRadius: 8,
-                                                overflow: "hidden",
-                                                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                                                background: "white",
-                                                position: "relative",
-                                                display: "block",
-                                            }}
-                                        >
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={img.imageUrl}
-                                                alt={img.title || "Gallery image"}
-                                                style={{
-                                                    width: "100%",
-                                                    height: "auto",
-                                                    display: "block",
-                                                    transition: "transform 0.4s ease",
-                                                }}
-                                            />
-                                            {/* Caption overlay on hover */}
-                                            {(img.title || img.caption) && (
-                                                <div style={{
-                                                    position: "absolute",
-                                                    inset: 0,
-                                                    background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)",
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    justifyContent: "flex-end",
-                                                    padding: "1.25rem",
-                                                    opacity: 0,
-                                                    transition: "opacity 0.3s ease",
-                                                }}
-                                                    className="gallery-overlay"
-                                                >
-                                                    {img.title && (
-                                                        <p style={{
-                                                            color: "white",
-                                                            fontWeight: 700,
-                                                            fontSize: "0.9rem",
-                                                            marginBottom: img.caption ? "0.25rem" : 0,
-                                                        }}>
-                                                            {img.title}
-                                                        </p>
-                                                    )}
-                                                    {img.caption && (
-                                                        <p style={{
-                                                            color: "rgba(255,255,255,0.8)",
-                                                            fontSize: "0.78rem",
-                                                            lineHeight: 1.5,
-                                                        }}>
-                                                            {img.caption}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
+                                {/* Client component handles grid + lightbox */}
+                                <GalleryClient images={images} />
                             </>
                         )}
                     </div>
