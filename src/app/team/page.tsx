@@ -189,6 +189,7 @@ async function getTeamMembers(): Promise<TeamMember[]> {
                 image: item.meta?.external_avatar || item.featured_image_url || "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Captain-1.jpg",
                 shortBio: paragraphs[0] ? (paragraphs[0].substring(0, 150) + "...") : "",
                 bio: paragraphs,
+                linkedinUrl: item.meta?.linkedin_url || "",
             };
         }).reverse();
     } catch (error) {
