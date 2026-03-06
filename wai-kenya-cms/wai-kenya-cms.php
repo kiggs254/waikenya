@@ -215,3 +215,177 @@ if ( ! function_exists( 'wai_kenya_expose_featured_image' ) ) {
     }
     add_action( 'rest_api_init', 'wai_kenya_expose_featured_image' );
 }
+
+/* ─────────────────────────────────────────────
+   7. BULK GALLERY UPLOAD — Admin Page
+───────────────────────────────────────────── */
+if ( ! function_exists( 'wai_kenya_bulk_gallery_menu' ) ) {
+    function wai_kenya_bulk_gallery_menu() {
+        add_submenu_page(
+            'edit.php?post_type=wai_gallery',
+            'Bulk Upload Gallery Images',
+            '📤 Bulk Upload',
+            'edit_posts',
+            'wai-bulk-gallery',
+            'wai_kenya_bulk_gallery_page'
+        );
+    }
+    add_action( 'admin_menu', 'wai_kenya_bulk_gallery_menu' );
+}
+
+if ( ! function_exists( 'wai_kenya_bulk_gallery_page' ) ) {
+    function wai_kenya_bulk_gallery_page() {
+        ?>
+        <div class="wrap">
+            <h1>📤 Bulk Upload Gallery Images</h1>
+            <p style="color:#555;font-size:14px;margin-bottom:20px;">
+                Click <strong>"Select Images"</strong>, choose as many photos as you like from the Media Library
+                (or upload new ones), then click <strong>"Add to Gallery"</strong>. A Gallery post will be
+                created automatically for each image — no manual entry needed.
+            </p>
+
+            <button id="wai-open-media" class="button button-primary button-large">
+                🖼️ Select Images from Media Library
+            </button>
+
+            <div id="wai-preview-wrap" style="margin-top:24px;display:flex;flex-wrap:wrap;gap:12px;"></div>
+
+            <div id="wai-upload-actions" style="margin-top:20px;display:none;">
+                <button id="wai-do-upload" class="button button-primary button-large">
+                    ✅ Add Selected Images to Gallery
+                </button>
+                <span id="wai-status" style="margin-left:16px;font-size:14px;color:#2271b1;vertical-align:middle;"></span>
+            </div>
+        </div>
+
+        <script>
+        (function($) {
+            var frame, selectedIds = [];
+
+            $('#wai-open-media').on('click', function(e) {
+                e.preventDefault();
+
+                if ( frame ) { frame.open(); return; }
+
+                frame = wp.media({
+                    title:    'Select Gallery Images',
+                    button:   { text: 'Add to Gallery' },
+                    multiple: true,
+                    library:  { type: 'image' }
+                });
+
+                frame.on('select', function() {
+                    var attachments = frame.state().get('selection').toJSON();
+                    selectedIds = attachments.map(function(a){ return a.id; });
+
+                    // Render thumbnails
+                    var $wrap = $('#wai-preview-wrap').empty();
+                    attachments.forEach(function(a) {
+                        var thumb = (a.sizes && a.sizes.thumbnail) ? a.sizes.thumbnail.url : a.url;
+                        $wrap.append(
+                            $('<div>').css({position:'relative',display:'inline-block'}).append(
+                                $('<img>').attr('src', thumb).css({width:120,height:120,objectFit:'cover',borderRadius:4,border:'2px solid #2271b1'})
+                            ).append(
+                                $('<p>').text(a.filename || a.title).css({fontSize:11,textAlign:'center',maxWidth:120,overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis',margin:'4px 0 0'})
+                            )
+                        );
+                    });
+
+                    if ( selectedIds.length > 0 ) {
+                        $('#wai-upload-actions').show();
+                        $('#wai-status').text(selectedIds.length + ' image(s) selected.');
+                    }
+                });
+
+                frame.open();
+            });
+
+            $('#wai-do-upload').on('click', function() {
+                if ( ! selectedIds.length ) return;
+
+                var $btn    = $(this).prop('disabled', true).text('⏳ Creating posts…');
+                var $status = $('#wai-status');
+                var done    = 0;
+
+                $status.text('0 / ' + selectedIds.length + ' done…');
+
+                function processNext(i) {
+                    if ( i >= selectedIds.length ) {
+                        $btn.text('✅ Done!');
+                        $status.css('color','#00a32a').text('All ' + done + ' image(s) added to the gallery!');
+                        // Refresh the gallery list after 2s
+                        setTimeout(function(){ window.location.href = 'edit.php?post_type=wai_gallery'; }, 2000);
+                        return;
+                    }
+
+                    $.post(ajaxurl, {
+                        action:    'wai_create_gallery_post',
+                        attach_id: selectedIds[i],
+                        nonce:     waiGallery.nonce
+                    }, function(res) {
+                        if ( res.success ) done++;
+                        $status.text((i+1) + ' / ' + selectedIds.length + ' done…');
+                        processNext(i + 1);
+                    }).fail(function() {
+                        processNext(i + 1); // skip on error
+                    });
+                }
+
+                processNext(0);
+            });
+
+        }(jQuery));
+        </script>
+        <?php
+    }
+}
+
+/* Enqueue WP media + inline nonce for the bulk upload page */
+if ( ! function_exists( 'wai_kenya_bulk_gallery_scripts' ) ) {
+    function wai_kenya_bulk_gallery_scripts( $hook ) {
+        if ( strpos( $hook, 'wai-bulk-gallery' ) === false ) return;
+        wp_enqueue_media();
+        wp_add_inline_script( 'jquery', 'var waiGallery = ' . json_encode([
+            'nonce' => wp_create_nonce( 'wai_bulk_gallery' )
+        ]) . ';' );
+    }
+    add_action( 'admin_enqueue_scripts', 'wai_kenya_bulk_gallery_scripts' );
+}
+
+/* AJAX handler — creates one wai_gallery post per image */
+if ( ! function_exists( 'wai_kenya_create_gallery_post' ) ) {
+    function wai_kenya_create_gallery_post() {
+        check_ajax_referer( 'wai_bulk_gallery', 'nonce' );
+
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_send_json_error( 'Unauthorised' );
+        }
+
+        $attach_id = intval( $_POST['attach_id'] ?? 0 );
+        if ( ! $attach_id ) {
+            wp_send_json_error( 'No attachment ID' );
+        }
+
+        // Use the attachment filename as the post title
+        $title = get_the_title( $attach_id );
+        if ( ! $title ) {
+            $title = 'Gallery Image ' . $attach_id;
+        }
+
+        $post_id = wp_insert_post( [
+            'post_type'   => 'wai_gallery',
+            'post_title'  => sanitize_text_field( $title ),
+            'post_status' => 'publish',
+        ], true );
+
+        if ( is_wp_error( $post_id ) ) {
+            wp_send_json_error( $post_id->get_error_message() );
+        }
+
+        // Set the chosen image as the featured image
+        set_post_thumbnail( $post_id, $attach_id );
+
+        wp_send_json_success( [ 'post_id' => $post_id ] );
+    }
+    add_action( 'wp_ajax_wai_create_gallery_post', 'wai_kenya_create_gallery_post' );
+}
