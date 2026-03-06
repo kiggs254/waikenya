@@ -6,12 +6,12 @@ const news = [
     {
         tag: "Programs",
         title: "Girls in Aviation Day 2026: Inspiring the Next Generation",
-        image: "/images/youth.png"
+        image: "/images/wai_duo.jpg"
     },
     {
         tag: "Mentorship",
         title: "Breaking Barriers: A New Era of Mentorship in Kenyan Skies",
-        image: "/images/mentorship.png"
+        image: "/images/wai_panel.jpg"
     }
 ];
 

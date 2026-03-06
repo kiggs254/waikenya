@@ -25,7 +25,7 @@ export default function Hero() {
             <div className={styles.frameContainer}>
                 <div className={styles.frame}>
                     <Image
-                        src="/images/hero_bg.png"
+                        src="/images/wai_seated.jpg"
                         alt="Aviation Horizon"
                         fill
                         priority

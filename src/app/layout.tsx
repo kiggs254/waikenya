@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     siteName: "WAI Kenya",
     images: [
       {
-        url: "/images/hero_bg.png",
+        url: "/images/wai_group.jpg",
         width: 1200,
         height: 630,
       },

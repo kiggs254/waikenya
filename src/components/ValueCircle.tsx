@@ -35,7 +35,7 @@ export default function ValueCircle() {
                     <div className={styles.circle}></div>
                     <div className={styles.airplane}>
                         <Image
-                            src="/images/plane_top.png"
+                            src="/images/wai_duo.jpg"
                             alt="Private Jet Top View"
                             fill
                             style={{ objectFit: 'contain' }}

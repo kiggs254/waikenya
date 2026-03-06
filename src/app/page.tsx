@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     description: "Advancing women in every aviation career field in Kenya.",
     url: "https://waikenyachapter.com",
     siteName: "WAI Kenya",
-    images: [{ url: "/images/hero_bg.png", width: 1200, height: 630 }],
+    images: [{ url: "/images/wai_group.jpg", width: 1200, height: 630 }],
     locale: "en_KE",
     type: "website",
   },
@@ -202,7 +202,7 @@ export default async function Home() {
                   boxShadow: "30px 30px 0 var(--gray-light)",
                 }}
               >
-                <Image src="/images/team.png" alt="WAI Kenya Team" fill style={{ objectFit: "cover" }} />
+                <Image src="/images/wai_group.jpg" alt="WAI Kenya Team" fill style={{ objectFit: "cover" }} />
               </div>
             </div>
           </div>
@@ -261,19 +261,19 @@ export default async function Home() {
                   Icon: Plane,
                   title: "Girls in Aviation Day",
                   desc: "Our flagship program for girls aged 8–17. A day packed with flights, simulators, and inspiring role models to spark a passion for the skies.",
-                  img: "/images/girls_aviation.png",
+                  img: "/images/wai_refreshments.jpg",
                 },
                 {
                   Icon: Medal,
                   title: "Scholarships",
                   desc: "We award flight training and academic scholarships annually to deserving women pursuing careers in aviation and aerospace engineering.",
-                  img: "/images/mentorship.png",
+                  img: "/images/wai_panel.jpg",
                 },
                 {
                   Icon: Globe,
                   title: "Education Outreach",
                   desc: "We deliver aviation education to schools, educators, and youth groups across Kenya, building the pipeline for the next generation.",
-                  img: "/images/youth.png",
+                  img: "/images/wai_duo.jpg",
                 },
               ].map((p) => (
                 <div key={p.title} className="card">

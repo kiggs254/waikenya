@@ -235,7 +235,7 @@ export default async function ScholarshipsPage() {
 
                             <div style={{ position: "relative", height: "500px", borderRadius: 4, overflow: "hidden" }}>
                                 <Image
-                                    src="/images/mentorship.png"
+                                    src="/images/wai_panel.jpg"
                                     alt="WAI Scholarship recipient"
                                     fill
                                     style={{ objectFit: "cover" }}
