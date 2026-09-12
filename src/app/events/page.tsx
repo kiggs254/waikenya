@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { MapPin, Calendar, CheckCheck, Users, Globe, Ticket } from "lucide-react";
+import { decodeText, htmlToParagraphs } from "@/lib/wp";
 
 export const metadata: Metadata = {
     title: "Events | WAI Kenya Chapter",
@@ -100,19 +101,16 @@ async function getEvents(): Promise<Event[]> {
         const data = await res.json();
 
         return data.map((item: any) => {
-            const rawHtml = item.content?.rendered || "";
-            const paragraphs = rawHtml.split('</p>')
-                .map((p: string) => p.replace(/<[^>]+>/g, '').trim())
-                .filter(Boolean);
+            const paragraphs = htmlToParagraphs(item.content?.rendered || "");
 
             return {
                 id: item.slug || String(item.id),
-                title: item.title?.rendered || "Event",
+                title: decodeText(item.title?.rendered) || "Event",
                 hashtags: item.meta?.hashtags ? item.meta.hashtags.split(',').map((h: string) => h.trim()) : [],
                 date: item.meta?.event_date || "", // Will now come as YYYY-MM-DD
-                venue: item.meta?.venue || "",
+                venue: decodeText(item.meta?.venue),
                 category: item.meta?.wai_category as "Girls in Aviation" | "Conference" | "Outreach",
-                edition: item.meta?.edition || "",
+                edition: decodeText(item.meta?.edition),
                 description: paragraphs,
                 highlights: item.meta?.highlights ? item.meta.highlights.split(',').map((h: string) => h.trim()) : [],
                 link: item.meta?.external_url || "",

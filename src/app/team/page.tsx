@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TeamGrid, { type TeamMember } from "@/components/TeamGrid";
+import { decodeText, htmlToParagraphs, truncate } from "@/lib/wp";
 
 export const metadata: Metadata = {
     title: "The Team | WAI Kenya Chapter",
@@ -9,17 +10,20 @@ export const metadata: Metadata = {
         "Meet the passionate team behind Women in Aviation International – Kenya Chapter. Pilots, engineers, dispatchers, and advocates working to advance women in aviation.",
 };
 
+const FALLBACK_AVATAR =
+    "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Captain-1.jpg";
+
 const fallbackMembers: TeamMember[] = [
     {
         name: "Una Gertrude Odhiambo",
         role: "Co-Founder",
         tag: "Co-Founder",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Una-Gertrude.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Una-Gertrude.jpg",
         shortBio:
             "Flight Dispatcher & Operations Manager at Airkenya Express Ltd. 14 years of aviation experience. BBM in Aviation Management.",
         bio: [
             "Flight Dispatcher. Co-founder Women In Aviation Kenya Chapter. Member IFALDA and KAFDA. Operations Manager at Airkenya Express Ltd. With 14 years experience in aviation. Graduated with BBM in Aviation Management. Mentors young girls in aviation.",
-            "One dazzling Friday morning we had an educational tour to Eldoret International. I was fascinated when I saw big cargo planes parked at the ramp. My focus changed to Aircraft -- 'Love at first sight'. This was my path into the aviation industry.",
+            "One dazzling Friday morning we had an educational tour to Eldoret International. I was fascinated when I saw big cargo planes parked at the ramp. My focus changed to Aircraft — ‘Love at first sight’. This was my path into the aviation industry.",
             "I went to Skypath Aviation College where I pursued Advanced Diploma in Flight Operations and Dispatch for two years. After a week I landed a job in Tanzania as a Flight Dispatcher. My experience in Dar es Salaam was entrancing; I had amazing opportunities at my youthful age but not to say I did not face challenges.",
             "The aviation industry in Africa and more specifically East Africa had not budded and hence opportunities for growth. Again a door opened for me to progress and learn more on Aviation Management. Enrolled for Bachelor in Aviation Management – Moi University.",
             "After graduating from Moi University, my friend Fiona Omondi and I began this journey of exploring more into aviation and creating awareness to those not privileged to know what careers are in aviation. We learned about Women in Aviation and strategized on using this vehicle to mentor young men and Women and especially young girls to pursue careers in aviation.",
@@ -31,7 +35,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Fiona Omondi",
         role: "Co-Founder",
         tag: "Co-Founder",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Captain-1.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Captain-1.jpg",
         shortBio:
             "Head of Business Development & Projects at Tradewinds Aviation Services Ltd. Masters from University of Aberdeen, UK.",
         bio: [
@@ -45,7 +49,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Mary Mukulu Kai",
         role: "Financier",
         tag: "Financier",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Captain.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Captain.jpg",
         shortBio:
             "Former Kenya Airways Captain on B737, B767, B777 & B787. First woman to captain a Boeing aircraft in Kenya. MBA from University of Leicester.",
         bio: [
@@ -63,7 +67,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Irene Koki Mutungi",
         role: "Chairperson",
         tag: "Chairperson",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Captain-3.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Captain-3.jpg",
         shortBio:
             "Airline Captain — first African female Boeing 787 'Dreamliner' Captain. Kenya Airways pioneer. Forbes 'Top 20 Youngest Power Women in Africa 2014'.",
         bio: [
@@ -79,7 +83,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Primerose Njeri",
         role: "Secretary",
         tag: "Secretary",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Captain-2.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Captain-2.jpg",
         shortBio:
             "Aircraft Maintenance Technician at Wilson Airport. Diploma in Aeronautical Engineering. Pratt & Whitney scholarship recipient 2018.",
         bio: [
@@ -94,7 +98,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Faith Syovata",
         role: "Treasurer",
         tag: "Treasurer",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Faith.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Faith.jpg",
         shortBio:
             "Joined WAI as a university student in 2014. Civil Aviation graduate. Works with the Kenya Civil Aviation Authority. Violin player and chess enthusiast.",
         bio: [
@@ -108,7 +112,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Emily Manduku",
         role: "Outreach Chair",
         tag: "Outreach Chair",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/09/Emily-Manduku.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/09/Emily-Manduku.jpg",
         shortBio:
             "Flight Operations Inspector – Cabin Safety at Kenya CAA. WAI member since 2017. Formerly a Flight Attendant for 14 years.",
         bio: [
@@ -123,7 +127,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Frank Nyawa",
         role: "Social Media & Communications",
         tag: "Communications",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/09/Frank-Nyawa.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/09/Frank-Nyawa.jpg",
         shortBio:
             "Pilot & PR Strategist. Created and manages all WAI Kenya social media platforms. Trained at FTC Wilson Airport, Select Aviation Canada, and Flyby Spain.",
         bio: [
@@ -138,7 +142,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Loise Njoroge",
         role: "Former Chairperson",
         tag: "Former Chair",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Loise-Njoroge.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/08/Loise-Njoroge.jpg",
         shortBio:
             "State Safety Program Coordinator at KCAA. Former Senior Air Traffic Controller (12 years). M.Sc. Aeronautics from Embry-Riddle. Boeing & Airbus WAI scholarship winner.",
         bio: [
@@ -153,7 +157,7 @@ const fallbackMembers: TeamMember[] = [
         name: "Hon John Ogutu Omondi",
         role: "Patron",
         tag: "Patron",
-        image: "https://www.waikenyachapter.com/wp-content/uploads/2020/09/Hon-Omondi.jpg",
+        image: "https://admin.waikenyachapter.com/wp-content/uploads/2020/09/Hon-Omondi.jpg",
         shortBio:
             "WAI-Kenya Chapter Patron. Former MP for Embakasi East. Co-founder of Tradewinds Aviation Services. 30+ years in aviation. Women & Girls' Empowerment Champion.",
         bio: [
@@ -176,18 +180,14 @@ async function getTeamMembers(): Promise<TeamMember[]> {
         const data = await res.json();
 
         return data.map((item: any) => {
-            const rawHtml = item.content?.rendered || "";
-            // Parse HTML to extract text paragraphs safely
-            const paragraphs = rawHtml.split('</p>')
-                .map((p: string) => p.replace(/<[^>]+>/g, '').trim())
-                .filter(Boolean);
+            const paragraphs = htmlToParagraphs(item.content?.rendered || "");
 
             return {
-                name: item.title?.rendered || "Unknown",
-                role: item.meta?.role || "",
-                tag: item.meta?.role || "",
-                image: item.meta?.external_avatar || item.featured_image_url || "https://www.waikenyachapter.com/wp-content/uploads/2020/08/Captain-1.jpg",
-                shortBio: paragraphs[0] ? (paragraphs[0].substring(0, 150) + "...") : "",
+                name: decodeText(item.title?.rendered) || "Unknown",
+                role: decodeText(item.meta?.role),
+                tag: decodeText(item.meta?.role),
+                image: item.meta?.external_avatar || item.featured_image_url || FALLBACK_AVATAR,
+                shortBio: truncate(paragraphs[0] ?? ""),
                 bio: paragraphs,
                 linkedinUrl: item.meta?.linkedin_url || "",
             };

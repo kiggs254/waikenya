@@ -6,6 +6,7 @@ import HeroSlider from "@/components/HeroSlider";
 import Footer from "@/components/Footer";
 import PartnerCarousel from "@/components/PartnerCarousel";
 import { Plane, GraduationCap, Handshake, Rocket, Medal, Globe } from "lucide-react";
+import { decodeText } from "@/lib/wp";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://waikenyachapter.com"),
@@ -66,7 +67,7 @@ async function getPartners(): Promise<Partner[] | undefined> {
         || item._embedded?.["wp:featuredmedia"]?.[0]?.source_url
         || "";
       return {
-        name: item.title?.rendered || "Partner",
+        name: decodeText(item.title?.rendered) || "Partner",
         logoUrl,
         websiteUrl: item.meta?.website_url || "",
       };
@@ -108,7 +109,7 @@ async function getUpcomingEvent(): Promise<UpcomingEvent | undefined> {
     const dateObj = new Date(nextEvent.meta.event_date);
 
     return {
-      title: nextEvent.title?.rendered || "Upcoming Event",
+      title: decodeText(nextEvent.title?.rendered) || "Upcoming Event",
       dateDisplay: dateObj.toLocaleDateString('en-GB', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
       }),

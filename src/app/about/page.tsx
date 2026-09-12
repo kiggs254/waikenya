@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { Plane, GraduationCap, Users, Trophy, Star } from "lucide-react";
 import PartnerCarousel from "@/components/PartnerCarousel";
+import { decodeText } from "@/lib/wp";
 
 export const metadata: Metadata = {
     title: "About Us | WAI Kenya Chapter",
@@ -115,8 +116,8 @@ async function getPioneers(): Promise<Pioneer[]> {
         if (!res.ok) return fallbackPioneers;
         const data = await res.json();
         return data.map((item: any) => ({
-            name: item.title?.rendered || "Unknown",
-            note: item.meta?.note || "",
+            name: decodeText(item.title?.rendered) || "Unknown",
+            note: decodeText(item.meta?.note),
         }));
     } catch {
         return fallbackPioneers;
@@ -138,7 +139,7 @@ async function getPartners(): Promise<Partner[] | undefined> {
                 || item._embedded?.["wp:featuredmedia"]?.[0]?.source_url
                 || "";
             return {
-                name: item.title?.rendered || "Partner",
+                name: decodeText(item.title?.rendered) || "Partner",
                 logoUrl,
                 websiteUrl: item.meta?.website_url || "",
             };

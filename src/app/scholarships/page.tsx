@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { decodeText, htmlToParagraphs } from "@/lib/wp";
 
 export const metadata: Metadata = {
     title: "Scholarships | WAI Kenya Chapter",
@@ -33,15 +34,14 @@ async function getScholarships(): Promise<Scholarship[]> {
         if (!res.ok) return [];
         const data = await res.json();
         return data.map((item: any) => {
-            const paragraphs = (item.content?.rendered || "").split('</p>')
-                .map((p: string) => p.replace(/<[^>]+>/g, '').trim())
-                .filter(Boolean);
+            const paragraphs = htmlToParagraphs(item.content?.rendered || "");
             return {
-                title: item.title?.rendered || "",
+                title: decodeText(item.title?.rendered),
                 content: paragraphs,
-                amount: item.meta?.amount || "",
-                deadline: item.meta?.deadline || "",
-                status: item.meta?.status || "",
+                amount: decodeText(item.meta?.amount),
+                deadline: decodeText(item.meta?.deadline),
+                // The plugin registers this meta key as `wai_status`.
+                status: decodeText(item.meta?.wai_status ?? item.meta?.status),
             };
         });
     } catch (error) {

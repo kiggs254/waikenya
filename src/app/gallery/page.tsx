@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GalleryClient from "@/components/GalleryClient";
 import { Images } from "lucide-react";
+import { decodeText, stripHtml } from "@/lib/wp";
 
 export const metadata: Metadata = {
     title: "Gallery | WAI Kenya Chapter",
@@ -33,11 +34,9 @@ async function getGalleryImages(): Promise<GalleryImage[]> {
             .filter((item: any) => item.featured_image_url)
             .map((item: any) => ({
                 id: item.id,
-                title: item.title?.rendered || "",
+                title: decodeText(item.title?.rendered),
                 imageUrl: item.featured_image_url,
-                caption: item.content?.rendered
-                    ? item.content.rendered.replace(/<[^>]+>/g, "").trim()
-                    : "",
+                caption: stripHtml(item.content?.rendered || ""),
             }));
     } catch {
         return [];
