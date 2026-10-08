@@ -5,7 +5,11 @@ import Navbar from "@/components/Navbar";
 import HeroSlider from "@/components/HeroSlider";
 import Footer from "@/components/Footer";
 import PartnerCarousel from "@/components/PartnerCarousel";
-import { Plane, GraduationCap, Handshake, Rocket, Medal, Globe } from "lucide-react";
+import {
+  Plane, GraduationCap, Handshake, Rocket, Medal, Globe,
+  Users, CalendarDays, Heart, HandHeart, Mail,
+} from "lucide-react";
+import { WAI } from "@/lib/site";
 import { decodeText } from "@/lib/wp";
 
 export const metadata: Metadata = {
@@ -50,6 +54,17 @@ const Label = ({ text }: { text: string }) => (
 const Bar = ({ color = "var(--teal)" }: { color?: string }) => (
   <div style={{ width: 48, height: 3, background: color, marginBottom: "1.5rem" }} />
 );
+
+/** The calls to action the Chapter asked to carry across the site. */
+const ACTIONS = [
+  { icon: Plane, label: "JOIN WAI", sub: "Become a member of Women in Aviation International", href: WAI.membershipInformation, external: true, feature: true },
+  { icon: Users, label: "BECOME A MEMBER", sub: "See categories and Kenyan rates", href: "/membership", external: false, feature: false },
+  { icon: CalendarDays, label: "UPCOMING EVENTS", sub: "The Chapter calendar for the year", href: "/events", external: false, feature: false },
+  { icon: GraduationCap, label: "APPLY FOR A SCHOLARSHIP", sub: "Flight training, engineering, dispatch and more", href: "/scholarships", external: false, feature: false },
+  { icon: Heart, label: "DONATE", sub: "Fund mentorship, STEM and girls staying in school", href: "/donate", external: false, feature: false },
+  { icon: HandHeart, label: "BECOME A VOLUNTEER", sub: "Give time to outreach, events or mentorship", href: "/contact", external: false, feature: false },
+  { icon: Mail, label: "CONTACT US", sub: "Questions, partnerships and school visits", href: "/contact", external: false, feature: false },
+];
 
 /* ───────────────────────────────────── */
 type Partner = { name: string; logoUrl: string; websiteUrl?: string; };
@@ -133,7 +148,14 @@ export default async function Home() {
         <HeroSlider upcomingEvent={upcomingEvent} />
 
         {/* ── 2. QUICK INTRO BAR ────────────────────── */}
-        <section style={{ background: "var(--teal)", padding: "2.5rem 0" }}>
+        <section
+          style={{
+            background:
+              "linear-gradient(100deg, var(--teal-deep) 0%, var(--teal) 48%, #1f8a9c 100%)",
+            padding: "2.5rem 0",
+            borderBottom: "4px solid var(--gold)",
+          }}
+        >
           <div
             className="container"
             style={{
@@ -191,7 +213,7 @@ export default async function Home() {
                 <p style={{ color: "var(--text-body)", fontSize: "1.05rem", marginBottom: "2.5rem" }}>
                   We provide year-round resources to assist women in aviation and to encourage young women to consider aviation as a career. WAI also offers educational outreach programs to educators, aviation industry members, and young people nationally and internationally.
                 </p>
-                <Link href="/join" className="btn-primary">Become a Member →</Link>
+                <Link href="/membership" className="btn-primary">Become a Member →</Link>
               </div>
 
               <div
@@ -408,42 +430,114 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── 8. CTA ────────────────────────────────── */}
+        {/* ── 8. TAKE ACTION ────────────────────────── */}
         <section
           style={{
-            background: "var(--teal)",
             padding: "7rem 0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
+            background:
+              "radial-gradient(circle at 12% 20%, rgba(201,168,76,0.22) 0%, transparent 48%), radial-gradient(circle at 88% 78%, rgba(42,164,173,0.28) 0%, transparent 52%), linear-gradient(135deg, var(--teal-deep) 0%, var(--teal-dark) 60%, var(--teal) 100%)",
+            color: "white",
           }}
         >
-          <div>
-            <h2 style={{ fontSize: "3rem", fontWeight: 900, color: "white", marginBottom: "1rem", letterSpacing: "-1px" }}>
-              Ready to Take Flight?
-            </h2>
-            <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.1rem", maxWidth: 500, margin: "0 auto 3rem" }}>
-              Join the WAI Kenya Chapter today and be part of a movement that is rewriting the story of women in African aviation.
-            </p>
-            <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center" }}>
-              <Link href="/join" className="btn-outline">Apply for Membership</Link>
-              <Link
-                href="#contact"
+          <div className="container">
+            <div style={{ textAlign: "center", maxWidth: 620, margin: "0 auto 3.5rem" }}>
+              <p
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  color: "white",
+                  fontSize: "0.74rem",
                   fontWeight: 700,
-                  gap: "0.5rem",
-                  opacity: 0.75,
-                  transition: "opacity 0.2s",
+                  letterSpacing: "4px",
+                  textTransform: "uppercase",
+                  color: "var(--gold)",
+                  marginBottom: "1.2rem",
                 }}
               >
-                Contact Us →
-              </Link>
+                Take action
+              </p>
+              <h2
+                style={{
+                  fontSize: "clamp(2.1rem, 5vw, 3rem)",
+                  fontWeight: 900,
+                  color: "white",
+                  marginBottom: "1.1rem",
+                  letterSpacing: "-1.5px",
+                }}
+              >
+                Ready to take flight?
+              </h2>
+              <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "1.05rem", lineHeight: 1.75 }}>
+                Whatever you have to give — time, skills, money or simply your curiosity — there is a
+                way in. Women and men alike.
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+                gap: "1rem",
+                maxWidth: 1100,
+                margin: "0 auto",
+              }}
+            >
+              {ACTIONS.map(({ icon: Icon, label, sub, href, external, feature }) => {
+                const inner = (
+                  <>
+                    <span className="action-icon"><Icon size={20} strokeWidth={2} /></span>
+                    <span className="action-label">{label}</span>
+                    <span className="action-sub">{sub}</span>
+                  </>
+                );
+                const cls = feature ? "action-card action-card-feature" : "action-card";
+                return external ? (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+                    {inner}
+                  </a>
+                ) : (
+                  <Link key={label} href={href} className={cls}>{inner}</Link>
+                );
+              })}
             </div>
           </div>
+
+          <style>{`
+            .action-card {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 0.3rem;
+              padding: 1.75rem 1.6rem;
+              background: rgba(255,255,255,0.06);
+              border: 1px solid rgba(255,255,255,0.14);
+              border-radius: 8px;
+              transition: transform 0.28s ease, background 0.28s ease, border-color 0.28s ease;
+            }
+            .action-card:hover {
+              transform: translateY(-5px);
+              background: rgba(255,255,255,0.11);
+              border-color: rgba(201,168,76,0.6);
+            }
+            .action-card-feature {
+              background: var(--gold);
+              border-color: var(--gold);
+            }
+            .action-card-feature:hover { background: #d8b85c; border-color: #d8b85c; }
+            .action-icon { color: var(--gold); margin-bottom: 0.7rem; }
+            .action-card-feature .action-icon { color: var(--teal-deep); }
+            .action-label {
+              font-size: 0.95rem;
+              font-weight: 800;
+              letter-spacing: 0.3px;
+              color: #fff;
+            }
+            .action-card-feature .action-label { color: var(--teal-deep); }
+            .action-sub {
+              font-size: 0.8rem;
+              line-height: 1.55;
+              color: rgba(255,255,255,0.62);
+            }
+            .action-card-feature .action-sub { color: rgba(8,46,58,0.72); }
+            @media (prefers-reduced-motion: reduce) { .action-card { transition: none; } }
+          `}</style>
         </section>
 
         {/* ── PARTNERS CAROUSEL ── */}

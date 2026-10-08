@@ -22,6 +22,7 @@ if ( ! function_exists( 'wai_kenya_register_cpts' ) ) {
             'wai_pioneer'     => [ 'Pioneers',        'Pioneer',       'dashicons-star-filled'     ],
             'wai_partner'     => [ 'Partners',        'Partner',       'dashicons-networking'      ],
             'wai_gallery'     => [ 'Gallery Images',  'Gallery Image', 'dashicons-format-gallery'  ],
+            'wai_recipient'   => [ 'Scholarship Recipients', 'Recipient', 'dashicons-businesswoman'   ],
         ];
 
         foreach ( $types as $slug => $info ) {
@@ -52,11 +53,12 @@ if ( ! function_exists( 'wai_kenya_register_cpts' ) ) {
 if ( ! function_exists( 'wai_kenya_register_meta_fields' ) ) {
     function wai_kenya_register_meta_fields() {
         $schema = [
-            'wai_team'        => [ 'role', 'company', 'linkedin_url', 'external_avatar' ],
+            'wai_team'        => [ 'role', 'company', 'linkedin_url', 'external_avatar', 'group' ],
             'wai_event'       => [ 'event_date', 'venue', 'wai_category', 'edition', 'hashtags', 'highlights', 'external_url' ],
             'wai_scholarship' => [ 'amount', 'deadline', 'wai_status', 'application_link' ],
             'wai_pioneer'     => [ 'note' ],
             'wai_partner'     => [ 'website_url' ],
+            'wai_recipient'   => [ 'scholarship', 'year', 'field_of_study', 'institution', 'external_avatar' ],
         ];
 
         foreach ( $schema as $cpt => $fields ) {
@@ -82,6 +84,7 @@ if ( ! function_exists( 'wai_kenya_add_meta_boxes' ) ) {
         add_meta_box( 'wai_scholarship_meta', 'Scholarship Details',  'wai_kenya_render_scholarship_meta', 'wai_scholarship', 'normal', 'high' );
         add_meta_box( 'wai_pioneer_meta',     'Pioneer Details',      'wai_kenya_render_pioneer_meta',     'wai_pioneer',     'normal', 'high' );
         add_meta_box( 'wai_partner_meta',     'Partner Details',      'wai_kenya_render_partner_meta',     'wai_partner',     'normal', 'high' );
+        add_meta_box( 'wai_recipient_meta',   'Recipient Details',    'wai_kenya_render_recipient_meta',   'wai_recipient',   'normal', 'high' );
     }
     add_action( 'add_meta_boxes', 'wai_kenya_add_meta_boxes' );
 }
@@ -109,6 +112,19 @@ if ( ! function_exists( 'wai_kenya_render_team_meta' ) ) {
         wai_kenya_input( 'company',         'Company (e.g. Kenya Airways)',             get_post_meta( $post->ID, 'company',         true ) );
         wai_kenya_input( 'linkedin_url',    'LinkedIn URL',                             get_post_meta( $post->ID, 'linkedin_url',    true ), 'url' );
         wai_kenya_input( 'external_avatar', 'External Avatar Image URL',               get_post_meta( $post->ID, 'external_avatar', true ), 'url' );
+        wai_kenya_input( 'group',           'Section: board, volunteer, or "board,volunteer" for both', get_post_meta( $post->ID, 'group', true ) );
+    }
+}
+
+if ( ! function_exists( 'wai_kenya_render_recipient_meta' ) ) {
+    function wai_kenya_render_recipient_meta( $post ) {
+        wp_nonce_field( 'wai_save_meta', 'wai_meta_nonce' );
+        wai_kenya_input( 'scholarship',     'Scholarship received (e.g. Pratt & Whitney Maintenance Scholarship)', get_post_meta( $post->ID, 'scholarship',     true ) );
+        wai_kenya_input( 'year',            'Year awarded (e.g. 2018)',                 get_post_meta( $post->ID, 'year',            true ) );
+        wai_kenya_input( 'field_of_study',  'Area of study / training',                 get_post_meta( $post->ID, 'field_of_study',  true ) );
+        wai_kenya_input( 'institution',     'Institution (optional)',                   get_post_meta( $post->ID, 'institution',     true ) );
+        wai_kenya_input( 'external_avatar', 'Photograph URL (or set a Featured Image)', get_post_meta( $post->ID, 'external_avatar', true ), 'url' );
+        echo '<p style="color:#666;margin-top:10px;">Use the main editor above for a short profile or achievement.</p>';
     }
 }
 
@@ -182,6 +198,8 @@ if ( ! function_exists( 'wai_kenya_save_meta' ) ) {
             'event_date', 'venue', 'wai_category', 'edition', 'hashtags', 'highlights', 'external_url',
             'amount', 'deadline', 'wai_status', 'application_link',
             'note', 'website_url',
+            'group',
+            'scholarship', 'year', 'field_of_study', 'institution',
         ];
 
         foreach ( $fields as $field ) {
@@ -198,7 +216,7 @@ if ( ! function_exists( 'wai_kenya_save_meta' ) ) {
 ───────────────────────────────────────────── */
 if ( ! function_exists( 'wai_kenya_expose_featured_image' ) ) {
     function wai_kenya_expose_featured_image() {
-        $types = [ 'wai_team', 'wai_event', 'wai_scholarship', 'wai_pioneer', 'wai_partner', 'wai_gallery', 'post', 'page' ];
+        $types = [ 'wai_team', 'wai_event', 'wai_scholarship', 'wai_pioneer', 'wai_partner', 'wai_gallery', 'wai_recipient', 'post', 'page' ];
         foreach ( $types as $pt ) {
             register_rest_field( $pt, 'featured_image_url', [
                 'get_callback' => function( $post_arr ) {

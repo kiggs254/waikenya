@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import { Plane, GraduationCap, Users, Trophy, Star } from "lucide-react";
+import {
+    Plane, GraduationCap, Users, Trophy, Star, Globe2, Target, Eye, Sparkles,
+    Network, Megaphone, HeartHandshake, Award, Users2,
+} from "lucide-react";
+import { WAI } from "@/lib/site";
 import PartnerCarousel from "@/components/PartnerCarousel";
 import { decodeText } from "@/lib/wp";
 
@@ -99,6 +103,36 @@ const milestones = [
 ];
 
 type Pioneer = { name: string; note: string; };
+
+const WAI_GLOBAL = [
+    {
+        icon: Globe2,
+        title: "What WAI does globally",
+        body: "Runs the Annual International Women in Aviation Conference, awards scholarships every year, publishes Aviation for Women, and connects members through Mentor Connect, Jobs Connect and WAI Together.",
+    },
+    {
+        icon: Target,
+        title: "Its purpose",
+        body: "The encouragement and advancement of women in all aviation and aerospace career fields and interests — opening doors that were historically closed, and keeping them open.",
+    },
+    {
+        icon: Sparkles,
+        title: "How it supports women and girls",
+        body: "Scholarships and training funding, mentorship, professional development, and Girls in Aviation Day each September, which reaches tens of thousands of girls worldwide.",
+    },
+    {
+        icon: Network,
+        title: "How it supports its chapters",
+        body: "Chapters like Kenya get the global brand, scholarship pipeline, programme materials and network — then run outreach, mentorship and events for their own country.",
+    },
+];
+
+const PURPOSE_PILLARS = [
+    { icon: Megaphone, title: "Awareness", body: "Showing students what aviation careers actually exist, and what each one takes." },
+    { icon: HeartHandshake, title: "Mentorship", body: "Pairing young women with people already doing the job they want." },
+    { icon: Award, title: "Opportunity", body: "Connecting members to scholarships, training and industry networks." },
+    { icon: Users2, title: "Community", body: "A Kenyan network that keeps members going through a demanding industry." },
+];
 
 const fallbackPioneers: Pioneer[] = [
     { name: "Amelia Earhart", note: "First woman to fly solo across the Atlantic" },
@@ -246,8 +280,125 @@ export default async function AboutPage() {
                     </div>
                 </section>
 
-                {/* ── WHO WE ARE ── */}
-                <section style={{ padding: "8rem 0", background: "white" }}>
+                {/* ── STORY ARC ── */}
+                <section style={{ background: "var(--teal)", padding: "1.6rem 0" }}>
+                    <div
+                        className="container"
+                        style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "0.6rem 1rem",
+                        }}
+                    >
+                        {[
+                            ["Women in Aviation International", "#wai-international"],
+                            ["WAI Kenya Chapter", "#kenya-chapter"],
+                            ["Our Purpose", "#our-purpose"],
+                            ["Our Impact", "#our-impact"],
+                        ].map(([label, href], i, arr) => (
+                            <span key={href} style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem 1rem" }}>
+                                <a
+                                    href={href}
+                                    style={{
+                                        color: "white",
+                                        fontSize: "0.82rem",
+                                        fontWeight: 700,
+                                        letterSpacing: "0.3px",
+                                        borderBottom: "2px solid rgba(255,255,255,0.3)",
+                                        paddingBottom: 2,
+                                    }}
+                                >
+                                    {label}
+                                </a>
+                                {i < arr.length - 1 && (
+                                    <span aria-hidden="true" style={{ color: "var(--gold)", fontWeight: 900 }}>→</span>
+                                )}
+                            </span>
+                        ))}
+                    </div>
+                </section>
+
+                {/* ── WHO IS WAI INTERNATIONAL ── */}
+                <section
+                    id="wai-international"
+                    style={{ padding: "8rem 0 6rem", background: "var(--off-white)", scrollMarginTop: "80px" }}
+                >
+                    <div className="container">
+                        <div style={{ maxWidth: 760, margin: "0 auto 3.5rem", textAlign: "center" }}>
+                            <Label text="Start here" />
+                            <h2 className="section-title" style={{ marginBottom: "1.5rem" }}>
+                                Who is Women in Aviation International?
+                            </h2>
+                            <p style={{ color: "var(--text-body)", fontSize: "1.05rem", lineHeight: 1.85, marginBottom: "1.3rem" }}>
+                                Women in Aviation International (WAI) is a global non-profit dedicated to the
+                                encouragement and advancement of women in all aviation and aerospace career
+                                fields and interests. It has grown into a worldwide membership of pilots,
+                                engineers, maintenance technicians, air traffic controllers, dispatchers, cabin
+                                crew, business leaders, educators, students and enthusiasts — women and men
+                                alike.
+                            </p>
+                            <p style={{ color: "var(--text-body)", fontSize: "1.05rem", lineHeight: 1.85 }}>
+                                WAI Kenya Chapter is part of that global network. Joining here makes you a
+                                member of WAI worldwide.
+                            </p>
+                        </div>
+
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fit, minmax(265px, 1fr))",
+                                gap: "1.5rem",
+                                maxWidth: 1100,
+                                margin: "0 auto 3rem",
+                            }}
+                        >
+                            {WAI_GLOBAL.map(({ icon: Icon, title, body }) => (
+                                <div
+                                    key={title}
+                                    style={{
+                                        background: "var(--white)",
+                                        padding: "2.1rem 1.85rem",
+                                        borderRadius: 8,
+                                        border: "1px solid #e9edf0",
+                                    }}
+                                >
+                                    <Icon size={25} strokeWidth={1.8} color="var(--teal)" />
+                                    <h3 style={{ fontSize: "1.05rem", color: "var(--teal-deep)", margin: "1.1rem 0 0.6rem" }}>
+                                        {title}
+                                    </h3>
+                                    <p style={{ color: "var(--text-body)", fontSize: "0.9rem", lineHeight: 1.75 }}>
+                                        {body}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <p style={{ textAlign: "center" }}>
+                            <a
+                                href={WAI.home}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "0.45rem",
+                                    fontWeight: 800,
+                                    fontSize: "0.85rem",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.8px",
+                                    color: "var(--teal)",
+                                }}
+                            >
+                                Visit Women in Aviation International ↗
+                            </a>
+                        </p>
+                    </div>
+                </section>
+
+                {/* ── WAI KENYA CHAPTER ── */}
+                <section id="kenya-chapter" style={{ padding: "7rem 0", background: "white", scrollMarginTop: "80px" }}>
                     <div className="container">
                         <div
                             className="grid-2"
@@ -268,7 +419,7 @@ export default async function AboutPage() {
                                         marginBottom: "1rem",
                                     }}
                                 >
-                                    Who We Are
+                                    Women in Aviation – Kenya Chapter
                                 </p>
                                 <h2
                                     style={{
@@ -290,7 +441,7 @@ export default async function AboutPage() {
                                     Despite limited resources at inception, the Chapter rallied industry support and hosted its first membership drive in <strong>April 2012</strong>. This milestone was followed by <strong>Hon. John Omondi</strong> agreeing to serve as Patron, consistently supporting the career development of young women in aeronautical engineering.
                                 </p>
                                 <p style={{ color: "var(--text-body)", lineHeight: 1.85, fontSize: "1rem" }}>
-                                    The involvement of <strong>Captain Mary Mukulu Kai</strong> (then a Kenya Airways pilot) as Guest of Honor during the inaugural drive established the groundwork for ongoing mentorship and industry collaboration. Captain Kai now serves as the <strong>President</strong> of the WAI–Kenya Chapter.
+                                    The involvement of <strong>Captain Mary Mukulu Kai</strong> (then a Kenya Airways pilot) as Guest of Honor during the inaugural drive established the groundwork for ongoing mentorship and industry collaboration. Captain Kai continues to serve the Chapter as a <strong>Board Member</strong>, alongside President <strong>Penina Nginyo</strong>.
                                 </p>
                             </div>
 
@@ -384,8 +535,139 @@ export default async function AboutPage() {
                     </div>
                 </section>
 
-                {/* ── MILESTONES TIMELINE ── */}
-                <section style={{ padding: "8rem 0", background: "white" }}>
+                {/* ── OUR PURPOSE: VISION & MISSION ── */}
+                <section
+                    id="our-purpose"
+                    style={{
+                        padding: "7rem 0",
+                        background:
+                            "radial-gradient(circle at 12% 15%, rgba(201,168,76,0.17) 0%, transparent 48%), linear-gradient(135deg, var(--teal-deep) 0%, var(--teal) 100%)",
+                        color: "white",
+                        scrollMarginTop: "80px",
+                    }}
+                >
+                    <div className="container">
+                        <div style={{ textAlign: "center", maxWidth: 620, margin: "0 auto 3.5rem" }}>
+                            <p
+                                style={{
+                                    fontSize: "0.74rem",
+                                    fontWeight: 700,
+                                    letterSpacing: "4px",
+                                    textTransform: "uppercase",
+                                    color: "var(--gold)",
+                                    marginBottom: "1.1rem",
+                                }}
+                            >
+                                Our purpose
+                            </p>
+                            <h2
+                                style={{
+                                    fontSize: "clamp(2rem, 4.5vw, 2.9rem)",
+                                    fontWeight: 900,
+                                    color: "white",
+                                    letterSpacing: "-1px",
+                                }}
+                            >
+                                Why the Chapter exists
+                            </h2>
+                        </div>
+
+                        <div className="grid-2" style={{ gap: "2rem", maxWidth: 1040, margin: "0 auto" }}>
+                            <div
+                                style={{
+                                    background: "rgba(255,255,255,0.07)",
+                                    border: "1px solid rgba(255,255,255,0.14)",
+                                    borderRadius: 10,
+                                    padding: "3rem 2.5rem",
+                                }}
+                            >
+                                <Eye size={30} strokeWidth={1.7} color="var(--gold)" />
+                                <h3
+                                    style={{
+                                        fontSize: "1.5rem",
+                                        fontWeight: 900,
+                                        color: "white",
+                                        margin: "1.4rem 0 1rem",
+                                        letterSpacing: "-0.5px",
+                                    }}
+                                >
+                                    Our Vision
+                                </h3>
+                                <div style={{ width: 44, height: 3, background: "var(--gold)", marginBottom: "1.4rem" }} />
+                                <p style={{ color: "rgba(255,255,255,0.86)", lineHeight: 1.85, fontSize: "1.02rem" }}>
+                                    A Kenyan aviation and aerospace industry in which women and girls are
+                                    represented at every level and in every career field — on the flight deck,
+                                    in the hangar, in the tower, in operations and in the boardroom — and in
+                                    which no girl rules out a career in aviation because she has never seen a
+                                    woman doing it.
+                                </p>
+                            </div>
+
+                            <div
+                                style={{
+                                    background: "rgba(255,255,255,0.07)",
+                                    border: "1px solid rgba(255,255,255,0.14)",
+                                    borderRadius: 10,
+                                    padding: "3rem 2.5rem",
+                                }}
+                            >
+                                <Target size={30} strokeWidth={1.7} color="var(--gold)" />
+                                <h3
+                                    style={{
+                                        fontSize: "1.5rem",
+                                        fontWeight: 900,
+                                        color: "white",
+                                        margin: "1.4rem 0 1rem",
+                                        letterSpacing: "-0.5px",
+                                    }}
+                                >
+                                    Our Mission
+                                </h3>
+                                <div style={{ width: 44, height: 3, background: "var(--gold)", marginBottom: "1.4rem" }} />
+                                <p style={{ color: "rgba(255,255,255,0.86)", lineHeight: 1.85, fontSize: "1.02rem" }}>
+                                    To bridge the gender gap in Kenyan aviation by creating awareness of
+                                    aviation careers, mentoring women and girls into and through them,
+                                    connecting members to scholarships, training and professional networks,
+                                    and supporting girls — including through menstrual dignity initiatives —
+                                    so they stay in school long enough to reach them.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+                                gap: "1.25rem",
+                                maxWidth: 1040,
+                                margin: "2rem auto 0",
+                            }}
+                        >
+                            {PURPOSE_PILLARS.map(({ icon: Icon, title, body }) => (
+                                <div
+                                    key={title}
+                                    style={{
+                                        background: "rgba(255,255,255,0.05)",
+                                        borderRadius: 8,
+                                        padding: "1.75rem 1.5rem",
+                                        borderTop: "3px solid var(--gold)",
+                                    }}
+                                >
+                                    <Icon size={21} strokeWidth={1.9} color="var(--gold)" />
+                                    <h4 style={{ fontSize: "0.97rem", color: "white", margin: "0.85rem 0 0.45rem" }}>
+                                        {title}
+                                    </h4>
+                                    <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", lineHeight: 1.7 }}>
+                                        {body}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── OUR IMPACT ── */}
+                <section id="our-impact" style={{ padding: "7rem 0", background: "white", scrollMarginTop: "80px" }}>
                     <div className="container">
                         <div style={{ textAlign: "center", marginBottom: "5rem" }}>
                             <Label text="Journey & Impact" />

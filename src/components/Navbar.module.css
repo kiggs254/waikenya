@@ -4,15 +4,15 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    padding: 1.25rem 0;
+    padding: 1.1rem 0;
     background: transparent;
-    transition: all 0.4s ease;
+    transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
 }
 
 /* ── WHITE on scroll ── */
 .scrolled {
     background: #ffffff;
-    padding: 0.8rem 0;
+    padding: 0.7rem 0;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -23,27 +23,32 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1.5rem;
 }
 
 /* Logo */
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.7rem;
     z-index: 1001;
+    flex-shrink: 0;
 }
 
 .logoImg {
     border-radius: 50%;
     flex-shrink: 0;
+    width: 46px;
+    height: 46px;
 }
 
 .logoText {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 900;
     color: var(--white);
     letter-spacing: -0.5px;
     transition: color 0.3s ease;
+    white-space: nowrap;
 }
 
 .scrolled:not(.menuOpen) .logoText {
@@ -54,38 +59,39 @@
     color: var(--white);
 }
 
-.scrolled:not(.menuOpen) .burger span {
-    background: var(--teal-deep);
-}
-
-.menuOpen .burger span {
-    background: var(--white);
-}
-
 .logoAccent {
     color: var(--gold);
 }
 
-/* Links */
+/* ── Links ── */
 .links {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.6rem;
 }
 
 .link {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
     transition: color 0.25s ease;
     position: relative;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0.35rem 0;
 }
 
 .link::after {
     content: '';
     position: absolute;
-    bottom: -3px;
+    bottom: 0;
     left: 0;
     width: 0;
     height: 2px;
@@ -93,12 +99,19 @@
     transition: width 0.3s ease;
 }
 
-.link:hover {
+.link:hover,
+.link:focus-visible {
     color: var(--white);
 }
 
-.link:hover::after {
+.link:hover::after,
+.link:focus-visible::after,
+.active::after {
     width: 100%;
+}
+
+.active {
+    color: var(--white);
 }
 
 /* White mode links */
@@ -106,23 +119,113 @@
     color: var(--teal-dark);
 }
 
-.scrolled .link:hover {
+.scrolled .link:hover,
+.scrolled .link:focus-visible,
+.scrolled .active {
     color: var(--teal);
 }
 
-/* CTA */
+/* ── Dropdown ── */
+.dropdown {
+    position: relative;
+}
+
+.dropdownToggle {
+    cursor: pointer;
+}
+
+.chevron {
+    transition: transform 0.25s ease;
+    opacity: 0.75;
+}
+
+.chevronOpen {
+    transform: rotate(180deg);
+}
+
+.menu {
+    position: absolute;
+    top: calc(100% + 0.9rem);
+    left: 50%;
+    transform: translate(-50%, -6px);
+    min-width: 268px;
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 20px 48px rgba(8, 46, 58, 0.22);
+    border: 1px solid rgba(8, 46, 58, 0.07);
+    padding: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+    z-index: 20;
+}
+
+/* Bridges the gap between the trigger and the panel so the pointer can travel. */
+.menu::before {
+    content: '';
+    position: absolute;
+    top: -0.9rem;
+    left: 0;
+    right: 0;
+    height: 0.9rem;
+}
+
+.menuOpen2 {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+}
+
+.menuItem {
+    display: block;
+    padding: 0.7rem 0.85rem;
+    border-radius: 4px;
+    transition: background 0.18s ease;
+}
+
+.menuItem:hover,
+.menuItem:focus-visible {
+    background: var(--gray-light);
+}
+
+.menuItemActive {
+    background: rgba(26, 107, 124, 0.08);
+}
+
+.menuItemLabel {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--teal-deep);
+    margin-bottom: 0.12rem;
+}
+
+.menuItemDesc {
+    display: block;
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+/* ── CTA ── */
 .cta {
     background: var(--teal);
     color: var(--white);
-    padding: 0.6rem 1.5rem;
+    padding: 0.62rem 1.4rem;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     border-radius: 2px;
     transition: all 0.3s ease;
     letter-spacing: 0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-.cta:hover {
+.cta:hover,
+.cta:focus-visible {
     background: var(--gold);
     color: var(--teal-deep);
     transform: translateY(-2px);
@@ -132,7 +235,12 @@
     background: var(--teal);
 }
 
-/* Burger */
+.scrolled .cta:hover {
+    background: var(--gold);
+    color: var(--teal-deep);
+}
+
+/* ── Burger ── */
 .burger {
     display: none;
     flex-direction: column;
@@ -153,8 +261,12 @@
     transform-origin: center;
 }
 
-.scrolled .burger span {
+.scrolled:not(.menuOpen) .burger span {
     background: var(--teal-deep);
+}
+
+.menuOpen .burger span {
+    background: var(--white);
 }
 
 .burgerTop {
@@ -169,26 +281,37 @@
     transform: translateY(-7px) rotate(-45deg);
 }
 
-@media (max-width: 992px) {
+/* Tighten before the bar can wrap on small laptops. */
+@media (max-width: 1180px) {
+    .links {
+        gap: 1.15rem;
+    }
+
+    .link {
+        font-size: 0.8rem;
+    }
+}
+
+/* ── Mobile drawer ── */
+@media (max-width: 1050px) {
     .burger {
         display: flex;
     }
 
     .links {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         background: var(--teal-deep);
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 3rem;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 0;
+        padding: 6.5rem 1.75rem 3rem;
+        overflow-y: auto;
         opacity: 0;
         pointer-events: none;
         transform: translateY(-10px);
-        transition: all 0.4s ease;
+        transition: opacity 0.35s ease, transform 0.35s ease;
     }
 
     .links.open {
@@ -198,12 +321,87 @@
     }
 
     .links .link {
-        font-size: 1.6rem;
+        font-size: 1.15rem;
         color: var(--white);
+        justify-content: space-between;
+        width: 100%;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .links .link::after {
+        display: none;
+    }
+
+    .dropdown {
+        width: 100%;
+    }
+
+    /* Inline accordion instead of a floating panel. */
+    .menu {
+        position: static;
+        transform: none;
+        min-width: 0;
+        width: 100%;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        display: none;
+    }
+
+    .menuOpen2 {
+        display: block;
+        transform: none;
+        padding: 0.5rem 0 0.75rem;
+    }
+
+    .menu::before {
+        display: none;
+    }
+
+    .menuItem:hover,
+    .menuItem:focus-visible,
+    .menuItemActive {
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+    .menuItemLabel {
+        color: var(--gold);
+        font-size: 0.98rem;
+    }
+
+    .menuItemDesc {
+        color: rgba(255, 255, 255, 0.5);
     }
 
     .cta {
+        margin-top: 2rem;
         padding: 1rem 2.5rem;
         font-size: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .inner {
+        padding: 0 1.25rem;
+    }
+
+    .logoText {
+        font-size: 1.15rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nav,
+    .link,
+    .menu,
+    .chevron,
+    .cta,
+    .links,
+    .burger span {
+        transition: none;
     }
 }

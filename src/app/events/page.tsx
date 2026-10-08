@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { MapPin, Calendar, CheckCheck, Users, Globe, Ticket } from "lucide-react";
 import { decodeText, htmlToParagraphs } from "@/lib/wp";
+import EventsCalendar, { type CalendarEntry } from "@/components/EventsCalendar";
 
 export const metadata: Metadata = {
     title: "Events | WAI Kenya Chapter",
@@ -25,6 +26,42 @@ type Event = {
     past: boolean;
     featuredImage?: string;
 };
+
+/**
+ * The Chapter's recurring fixtures. These appear on the calendar whether or not
+ * a dated entry exists in WordPress yet, so visitors can plan around them.
+ */
+const ANNUAL_FIXTURES: CalendarEntry[] = [
+    {
+        month: 2,
+        title: "Annual Women in Aviation International Conference",
+        detail: "February or March · keynotes, seminars, exhibit hall and scholarship awards",
+        annual: true,
+    },
+    {
+        month: 2,
+        title: "International Women's Day / Annual Dinner",
+        detail: "March · the Chapter's annual dinner",
+        annual: true,
+    },
+    {
+        month: 8,
+        title: "Girls in Aviation Day",
+        detail: "September · airports, towers, hangars and ramps with Kenyan girls",
+        annual: true,
+    },
+];
+
+/** Month index from a YYYY-MM-DD or a legacy "26 September 2020" string. */
+function monthOf(date: string): number | null {
+    if (!date) return null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        const m = Number(date.slice(5, 7));
+        return m >= 1 && m <= 12 ? m - 1 : null;
+    }
+    const parsed = new Date(date);
+    return Number.isNaN(parsed.getTime()) ? null : parsed.getMonth();
+}
 
 const fallbackEvents: Event[] = [
     {
@@ -141,6 +178,7 @@ type ProcessedEvent = Event & { past: boolean; dateDisplay: string };
 function EventCard({ event, index, isUpcoming = false }: { event: ProcessedEvent, index: number, isUpcoming?: boolean }) {
     return (
         <div
+            id={`event-${event.id}`}
             className="grid-sidebar"
             style={{
                 gap: 0,
@@ -149,6 +187,7 @@ function EventCard({ event, index, isUpcoming = false }: { event: ProcessedEvent
                 overflow: "hidden",
                 boxShadow: "0 4px 28px rgba(0,0,0,0.07)",
                 border: "1px solid #edf0f3",
+                scrollMarginTop: "90px",
             }}
         >
             {/* Left — featured image panel */}
@@ -389,6 +428,22 @@ export default async function EventsPage() {
     });
 
     const upcomingEvents = processedEvents.filter(e => !e.past).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Calendar: the Chapter's annual fixtures, plus anything dated in the CMS.
+    const calendarEntries: CalendarEntry[] = [
+        ...ANNUAL_FIXTURES,
+        ...processedEvents.flatMap((e): CalendarEntry[] => {
+            const month = monthOf(e.date);
+            if (month === null) return [];
+            return [{
+                month,
+                title: e.title,
+                detail: [e.dateDisplay, e.venue].filter(Boolean).join(" · "),
+                past: e.past,
+                href: "#event-" + e.id,
+            }];
+        }),
+    ];
     const pastEvents = processedEvents.filter(e => e.past).sort((a, b) => {
         const dateA = new Date(a.date).getTime();
         const dateB = new Date(b.date).getTime();
@@ -456,6 +511,24 @@ export default async function EventsPage() {
                                 </div>
                             ))}
                         </div>
+                    </div>
+                </section>
+
+                {/* ── EVENTS CALENDAR ── */}
+                <section id="calendar" style={{ padding: "6.5rem 0", background: "var(--off-white)", scrollMarginTop: "90px" }}>
+                    <div className="container">
+                        <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 3.5rem" }}>
+                            <p className="section-label" style={{ justifyContent: "center" }}>Events calendar</p>
+                            <h2 className="section-title" style={{ marginBottom: "1rem" }}>
+                                The Chapter year
+                            </h2>
+                            <p style={{ color: "var(--text-body)" }}>
+                                Our fixed points in the year, plus every dated event — upcoming and past.
+                                Dates for annual events are confirmed closer to the time.
+                            </p>
+                        </div>
+
+                        <EventsCalendar entries={calendarEntries} currentMonth={today.getMonth()} />
                     </div>
                 </section>
 

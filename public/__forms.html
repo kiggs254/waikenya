@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Form blueprints — WAI Kenya Chapter</title>
+    <meta name="robots" content="noindex, nofollow">
+</head>
+
+<!--
+    Netlify detects forms by parsing static HTML at deploy time. Next.js renders
+    the real forms through the server function, so this unlinked file declares
+    each one for the build. Every field name here must match the live form.
+    See src/lib/forms.ts.
+-->
+
+<body>
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="contact">
+        <input name="bot-field">
+        <input type="text" name="name">
+        <input type="email" name="email">
+        <input type="text" name="subject">
+        <textarea name="message"></textarea>
+    </form>
+
+    <form name="membership" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="membership">
+        <input name="bot-field">
+        <input type="text" name="name">
+        <input type="email" name="email">
+        <input type="tel" name="phone">
+        <input type="text" name="occupation">
+        <input type="text" name="category">
+        <textarea name="message"></textarea>
+    </form>
+
+    <form name="scholarship" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="scholarship">
+        <input name="bot-field">
+        <input type="text" name="name">
+        <input type="email" name="email">
+        <input type="tel" name="phone">
+        <input type="text" name="school">
+        <input type="text" name="scholarship">
+        <textarea name="essay"></textarea>
+    </form>
+</body>
+
+</html>

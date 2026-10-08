@@ -12,7 +12,7 @@ const slides = [
         desc: "We are a nonprofit dedicated to the advancement of women in all aviation fields — from cockpits to control towers, from engineering bays to boardrooms.",
         img: "/images/wai_group.jpg",
         cta: { text: "Learn More", href: "#about" },
-        cta2: { text: "Join Us", href: "/join" },
+        cta2: { text: "Join WAI", href: "/membership" },
     },
     {
         label: "Our Pilots. Our Pride.",
@@ -28,7 +28,7 @@ const slides = [
         desc: "Our flagship outreach program for girls aged 8 to 17 provides hands-on aviation experiences that spark a lifelong passion for the skies.",
         img: "/images/wai_refreshments.jpg",
         cta: { text: "Girls in Aviation", href: "#programs" },
-        cta2: { text: "Upcoming Events", href: "#events" },
+        cta2: { text: "Upcoming Events", href: "/events" },
     },
 ];
 
@@ -44,7 +44,9 @@ export default function HeroSlider({ upcomingEvent }: { upcomingEvent?: Upcoming
 
     const dynamicSlides = [...slides];
     if (upcomingEvent) {
-        dynamicSlides.unshift({
+        // Second, not first: the opening slide should state who the Chapter is
+        // (and carry the page's h1) before promoting a single event.
+        dynamicSlides.splice(1, 0, {
             label: "Save the Date — " + upcomingEvent.dateDisplay,
             title: upcomingEvent.title,
             desc: "We are thrilled to announce our next major event! Make sure to register to secure your spot.",
@@ -78,23 +80,34 @@ export default function HeroSlider({ upcomingEvent }: { upcomingEvent?: Upcoming
                 className={styles.track}
                 style={{ transform: `translateX(-${current * 100}%)` }}
             >
-                {dynamicSlides.map((slide, i) => (
-                    <div key={i} className={styles.slide}>
-                        <div className={styles.bg}>
-                            <Image src={slide.img} alt={slide.title} fill priority={i === 0} />
-                        </div>
-                        <div className={styles.overlay} />
-                        <div className={styles.content}>
-                            <span className={styles.label}>{slide.label}</span>
-                            <h1 className={styles.title}>{slide.title}</h1>
-                            <p className={styles.desc}>{slide.desc}</p>
-                            <div className={styles.actions}>
-                                <Link href={slide.cta.href} className="btn-primary">{slide.cta.text} →</Link>
-                                <Link href={slide.cta2.href} className="btn-outline">{slide.cta2.text}</Link>
+                {dynamicSlides.map((slide, i) => {
+                    // Only the visible slide carries the page's h1 and is reachable
+                    // by assistive tech or the keyboard; the rest are decorative.
+                    const isActive = i === current;
+                    const Heading = isActive ? "h1" : "p";
+                    return (
+                        <div
+                            key={i}
+                            className={styles.slide}
+                            aria-hidden={!isActive}
+                            {...(!isActive ? { inert: "" as unknown as boolean } : {})}
+                        >
+                            <div className={styles.bg}>
+                                <Image src={slide.img} alt="" fill priority={i === 0} />
+                            </div>
+                            <div className={styles.overlay} />
+                            <div className={styles.content}>
+                                <span className={styles.label}>{slide.label}</span>
+                                <Heading className={styles.title}>{slide.title}</Heading>
+                                <p className={styles.desc}>{slide.desc}</p>
+                                <div className={styles.actions}>
+                                    <Link href={slide.cta.href} className="btn-primary">{slide.cta.text} →</Link>
+                                    <Link href={slide.cta2.href} className="btn-outline">{slide.cta2.text}</Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             {/* Progress Bar */}

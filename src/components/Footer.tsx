@@ -1,16 +1,47 @@
 import Link from "next/link";
-import { Twitter, Linkedin, Facebook, Instagram } from "lucide-react";
+import Image from "next/image";
+import { MapPin, Phone, Mail } from "lucide-react";
+import SocialIcon from "./SocialIcon";
+import { ACTIVE_SOCIALS, CONTACT, WAI } from "@/lib/site";
+
+const COLUMNS: { heading: string; links: { label: string; href: string; external?: boolean }[] }[] = [
+    {
+        heading: "Explore",
+        links: [
+            { label: "About Us", href: "/about" },
+            { label: "Board of Directors", href: "/leadership" },
+            { label: "Volunteers & Team", href: "/team" },
+            { label: "Events", href: "/events" },
+            { label: "Gallery", href: "/gallery" },
+        ],
+    },
+    {
+        heading: "Get Involved",
+        links: [
+            { label: "Membership", href: "/membership" },
+            { label: "Scholarships", href: "/scholarships" },
+            { label: "Donate", href: "/donate" },
+            { label: "Become a Volunteer", href: "/contact" },
+            { label: "Partner With Us", href: "/contact" },
+        ],
+    },
+    {
+        heading: "Support",
+        links: [
+            { label: "Resources", href: "/resources" },
+            { label: "FAQ", href: "/faq" },
+            { label: "Communication", href: "/communication" },
+            { label: "Contact Us", href: "/contact" },
+            { label: "WAI International", href: WAI.home, external: true },
+        ],
+    },
+];
 
 export default function Footer() {
     return (
-        <footer id="contact" style={{ background: "var(--teal-deep)", color: "white" }}>
-            {/* Top link bar */}
-            <div
-                style={{
-                    background: "var(--teal)",
-                    padding: "1.25rem 0",
-                }}
-            >
+        <footer id="contact-footer" style={{ background: "var(--teal-deep)", color: "white" }}>
+            {/* ── Contact strip ── */}
+            <div style={{ background: "var(--teal)", padding: "1.15rem 0" }}>
                 <div
                     className="container"
                     style={{
@@ -21,32 +52,47 @@ export default function Footer() {
                         gap: "1rem",
                     }}
                 >
-                    <p style={{ fontWeight: 700, fontSize: "0.9rem" }}>
-                        📍 Cargo Village, Freight Link Road, Mechanized Freight Terminal, 1st Floor, Nairobi, Kenya
+                    <p
+                        style={{
+                            fontWeight: 600,
+                            fontSize: "0.86rem",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                        }}
+                    >
+                        <MapPin size={15} strokeWidth={2.2} style={{ flexShrink: 0 }} />
+                        {CONTACT.address}
                     </p>
-                    <div style={{ display: "flex", gap: "2rem" }}>
-                        <a href="tel:+254720830902" style={{ fontSize: "0.9rem", opacity: 0.85, color: "white", textDecoration: "none" }}>📞 +254 720 830 902</a>
-                        <a href="mailto:info@waikenyachapter.com" style={{ fontSize: "0.9rem", opacity: 0.85, color: "white", textDecoration: "none" }}>✉️ info@waikenyachapter.com</a>
+                    <div style={{ display: "flex", gap: "1.75rem", flexWrap: "wrap" }}>
+                        <a href={CONTACT.phoneHref} className="footer-contact">
+                            <Phone size={14} strokeWidth={2.2} />
+                            {CONTACT.phone}
+                        </a>
+                        <a href={`mailto:${CONTACT.email}`} className="footer-contact">
+                            <Mail size={14} strokeWidth={2.2} />
+                            {CONTACT.email}
+                        </a>
                     </div>
                 </div>
             </div>
 
-            {/* Main Footer */}
-            <div className="container" style={{ padding: "6rem 2.5rem 4rem" }}>
+            {/* ── Main footer ── */}
+            <div className="container" style={{ padding: "5rem 2.5rem 3rem" }}>
                 <div
                     style={{
                         display: "grid",
                         gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                        gap: "4rem",
+                        gap: "3.5rem",
                     }}
                 >
                     {/* Brand */}
                     <div style={{ maxWidth: 320 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1.25rem" }}>
-                            <img src="/images/logo.png" alt="WAI Kenya Logo" width={60} height={60} />
+                            <Image src="/images/logo.png" alt="" width={56} height={56} style={{ borderRadius: "50%" }} />
                             <h2
                                 style={{
-                                    fontSize: "1.45rem",
+                                    fontSize: "1.4rem",
                                     fontWeight: 900,
                                     color: "white",
                                     letterSpacing: "-1px",
@@ -56,72 +102,75 @@ export default function Footer() {
                                 WAI <span style={{ color: "var(--gold)" }}>KENYA</span>
                             </h2>
                         </div>
-                        <p style={{ color: "rgba(255,255,255,0.65)", lineHeight: 1.7, marginBottom: "2rem", fontSize: "0.88rem" }}>
-                            A nonprofit dedicated to the encouragement and advancement of women in all aviation career fields and interests in Kenya.
+                        <p
+                            style={{
+                                color: "rgba(255,255,255,0.65)",
+                                lineHeight: 1.75,
+                                marginBottom: "1.75rem",
+                                fontSize: "0.88rem",
+                            }}
+                        >
+                            A chapter of Women in Aviation International, dedicated to the encouragement and
+                            advancement of women and girls in every aviation career field in Kenya.
                         </p>
-                        <div style={{ display: "flex", gap: "1rem" }}>
-                            <a href="#" className="footer-social-link" aria-label="X (Twitter)">
-                                <Twitter size={17} strokeWidth={2} />
-                            </a>
-                            <a href="#" className="footer-social-link" aria-label="LinkedIn">
-                                <Linkedin size={17} strokeWidth={2} />
-                            </a>
-                            <a href="https://www.facebook.com/WAIKenya" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="Facebook">
-                                <Facebook size={17} strokeWidth={2} />
-                            </a>
-                            <a href="https://www.instagram.com/womeninaviation_kenyachapter/?hl=en" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="Instagram">
-                                <Instagram size={17} strokeWidth={2} />
-                            </a>
+
+                        {ACTIVE_SOCIALS.length > 0 && (
+                            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                                {ACTIVE_SOCIALS.map((s) => (
+                                    <a
+                                        key={s.key}
+                                        href={s.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="footer-social-link"
+                                        aria-label={`WAI Kenya on ${s.label}`}
+                                    >
+                                        <SocialIcon platform={s.key} size={16} />
+                                    </a>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {COLUMNS.map((col) => (
+                        <div key={col.heading}>
+                            <h3
+                                style={{
+                                    fontSize: "0.78rem",
+                                    fontWeight: 700,
+                                    letterSpacing: "3px",
+                                    textTransform: "uppercase",
+                                    color: "var(--gold)",
+                                    marginBottom: "1.6rem",
+                                }}
+                            >
+                                {col.heading}
+                            </h3>
+                            <ul
+                                className="footer-links"
+                                style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.85rem" }}
+                            >
+                                {col.links.map((l) => (
+                                    <li key={`${col.heading}-${l.label}`}>
+                                        {l.external ? (
+                                            <a href={l.href} target="_blank" rel="noopener noreferrer">
+                                                {l.label}
+                                            </a>
+                                        ) : (
+                                            <Link href={l.href}>{l.label}</Link>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    </div>
-
-                    {/* Nav */}
-                    <div>
-                        <h4 style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1.75rem" }}>
-                            Explore
-                        </h4>
-                        <ul className="footer-links" style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
-                            <li><Link href="/about">About Us</Link></li>
-                            <li><Link href="/events">Programs</Link></li>
-                            <li><Link href="/membership">Membership</Link></li>
-                            <li><Link href="/team">The Team</Link></li>
-                            <li><Link href="/events">Events</Link></li>
-                            <li><Link href="/contact">Contact</Link></li>
-                        </ul>
-                    </div>
-
-                    {/* Programs */}
-                    <div>
-                        <h4 style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1.75rem" }}>
-                            Programs
-                        </h4>
-                        <ul className="footer-links" style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
-                            <li><Link href="/events">Girls in Aviation Day</Link></li>
-                            <li><Link href="/scholarships">Scholarships</Link></li>
-                            <li><Link href="/events">Education Outreach</Link></li>
-                            <li><Link href="/about">Mentorship</Link></li>
-                        </ul>
-                    </div>
-
-                    {/* Support */}
-                    <div>
-                        <h4 style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1.75rem" }}>
-                            Support
-                        </h4>
-                        <ul className="footer-links" style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
-                            <li><Link href="/membership">Join the Chapter</Link></li>
-                            <li><Link href="/membership">Partner With Us</Link></li>
-                            <li><Link href="/contact">Volunteer</Link></li>
-                            <li><Link href="/contact">Get in Touch</Link></li>
-                        </ul>
-                    </div>
+                    ))}
                 </div>
 
-                {/* Bottom bar */}
+                {/* ── Bottom bar ── */}
                 <div
                     style={{
-                        borderTop: "1px solid rgba(255,255,255,0.06)",
-                        marginTop: "5rem",
+                        borderTop: "1px solid rgba(255,255,255,0.08)",
+                        marginTop: "4rem",
                         paddingTop: "2rem",
                         display: "flex",
                         justifyContent: "space-between",
@@ -130,26 +179,39 @@ export default function Footer() {
                         gap: "1rem",
                     }}
                 >
-                    <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.85rem" }}>
-                        &copy; {new Date().getFullYear()} Women in Aviation International – Kenya Chapter. All rights reserved.
+                    <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.83rem" }}>
+                        &copy; {new Date().getFullYear()} Women in Aviation International – Kenya Chapter. All
+                        rights reserved.
                     </p>
-                    <div style={{ display: "flex", gap: "2rem" }}>
-                        <Link href="/" style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.8rem", textDecoration: "none" }}>Privacy Policy</Link>
-                        <Link href="/" style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.8rem", textDecoration: "none" }}>Terms of Service</Link>
-                    </div>
+                    <a
+                        href={WAI.kenyaChapter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem" }}
+                    >
+                        A chapter of Women in Aviation International ↗
+                    </a>
                 </div>
             </div>
 
             <style>{`
                 .footer-links a {
                     color: rgba(255,255,255,0.55);
-                    text-decoration: none;
-                    font-size: 0.92rem;
+                    font-size: 0.9rem;
                     transition: color 0.2s;
                 }
-                .footer-links a:hover {
-                    color: var(--gold);
+                .footer-links a:hover { color: var(--gold); }
+                .footer-contact {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.45rem;
+                    font-size: 0.86rem;
+                    font-weight: 600;
+                    color: white;
+                    opacity: 0.9;
+                    transition: opacity 0.2s;
                 }
+                .footer-contact:hover { opacity: 1; }
                 .footer-social-link {
                     width: 38px;
                     height: 38px;
@@ -165,6 +227,9 @@ export default function Footer() {
                     background: var(--gold);
                     color: var(--teal-deep);
                     transform: translateY(-2px);
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .footer-links a, .footer-contact, .footer-social-link { transition: none; }
                 }
             `}</style>
         </footer>

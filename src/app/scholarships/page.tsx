@@ -4,6 +4,11 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { decodeText, htmlToParagraphs } from "@/lib/wp";
+import EnquiryForm from "@/components/EnquiryForm";
+import ProfileGrid from "@/components/ProfileGrid";
+import { getRecipients } from "@/lib/recipients";
+import { Award } from "lucide-react";
+import { WAI } from "@/lib/site";
 
 export const metadata: Metadata = {
     title: "Scholarships | WAI Kenya Chapter",
@@ -51,7 +56,7 @@ async function getScholarships(): Promise<Scholarship[]> {
 }
 
 export default async function ScholarshipsPage() {
-    const scholarships = await getScholarships();
+    const [scholarships, recipients] = await Promise.all([getScholarships(), getRecipients()]);
     const featured = scholarships[0];
 
     return (
@@ -119,7 +124,18 @@ export default async function ScholarshipsPage() {
                         >
                             Scholarship awards are a major benefit of WAI membership and help members reach their goals and advance into the aviation and aerospace careers they have always dreamed about.
                         </p>
-                        <Link href="#apply" className="btn-outline">Apply for a Scholarship</Link>
+                        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+                            <a
+                                href={WAI.scholarships}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-primary"
+                                style={{ background: "var(--gold)", color: "var(--teal-deep)" }}
+                            >
+                                Apply on WAI International →
+                            </a>
+                            <Link href="#recipients" className="btn-outline">See our recipients</Link>
+                        </div>
                     </div>
                 </section>
 
@@ -615,6 +631,56 @@ export default async function ScholarshipsPage() {
                     </div>
                 </section>
 
+                {/* ── WAI KENYA SCHOLARSHIP RECIPIENTS ── */}
+                <section id="recipients" style={{ padding: "7rem 0", background: "var(--off-white)", scrollMarginTop: "90px" }}>
+                    <div className="container">
+                        <div style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 3.5rem" }}>
+                            <p className="section-label" style={{ justifyContent: "center" }}>Our recipients</p>
+                            <h2 className="section-title" style={{ marginBottom: "1.25rem" }}>
+                                WAI Kenya scholarship recipients
+                            </h2>
+                            <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
+                                The tangible impact of WAI&rsquo;s scholarship opportunities on women and girls
+                                in Kenya — the members who applied, won, and are now working in the industry.
+                            </p>
+                        </div>
+
+                        {recipients.length > 0 ? (
+                            <>
+                                <ProfileGrid members={recipients} accent="gold" />
+                                <p style={{ textAlign: "center", marginTop: "2.5rem", color: "var(--gray)", fontSize: "0.9rem" }}>
+                                    Click any recipient to read their full story.
+                                </p>
+                            </>
+                        ) : (
+                            <div
+                                style={{
+                                    maxWidth: 680,
+                                    margin: "0 auto",
+                                    textAlign: "center",
+                                    padding: "3rem 2rem",
+                                    background: "var(--white)",
+                                    border: "2px dashed rgba(26,107,124,0.25)",
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <Award size={30} strokeWidth={1.7} color="var(--gold)" />
+                                <h3 style={{ fontSize: "1.2rem", color: "var(--teal-deep)", margin: "1rem 0 0.75rem" }}>
+                                    Recipient profiles are being compiled
+                                </h3>
+                                <p style={{ color: "var(--text-body)", fontSize: "0.94rem", lineHeight: 1.75 }}>
+                                    We are gathering photographs and profiles for every Kenyan member who has
+                                    won a WAI scholarship. If you are one of them, we would love to feature
+                                    you.
+                                </p>
+                                <p style={{ marginTop: "1.5rem" }}>
+                                    <Link href="/contact" className="btn-primary">Tell us your story →</Link>
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </section>
+
                 {/* ── DISCLAIMER ── */}
                 <section style={{ padding: "4rem 0", background: "var(--gray-light)" }}>
                     <div className="container">
@@ -716,90 +782,34 @@ export default async function ScholarshipsPage() {
                                 <h3 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--teal-deep)", marginBottom: "2rem" }}>
                                     Scholarship Application
                                 </h3>
-                                <form style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                                    {[
-                                        { label: "Full Name", name: "name", type: "text" },
-                                        { label: "Email Address", name: "email", type: "email" },
-                                        { label: "Phone Number", name: "phone", type: "tel" },
-                                        { label: "School / Institution", name: "school", type: "text" },
-                                    ].map((field) => (
-                                        <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                                            <label
-                                                style={{
-                                                    fontSize: "0.82rem",
-                                                    fontWeight: 700,
-                                                    color: "var(--teal-deep)",
-                                                    letterSpacing: "0.5px",
-                                                }}
-                                            >
-                                                {field.label}
-                                            </label>
-                                            <input
-                                                type={field.type}
-                                                name={field.name}
-                                                required
-                                                style={{
-                                                    border: "1.5px solid #dde2e7",
-                                                    borderRadius: 2,
-                                                    padding: "0.8rem 1rem",
-                                                    fontSize: "0.95rem",
-                                                    background: "white",
-                                                    color: "var(--text-dark)",
-                                                }}
-                                            />
-                                        </div>
-                                    ))}
-
-                                    {/* Scholarship dropdown */}
-                                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                                        <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--teal-deep)", letterSpacing: "0.5px" }}>
-                                            Scholarship Applying For
-                                        </label>
-                                        <select
-                                            name="scholarship"
-                                            style={{
-                                                border: "1.5px solid #dde2e7",
-                                                borderRadius: 2,
-                                                padding: "0.8rem 1rem",
-                                                fontSize: "0.95rem",
-                                                background: "white",
-                                                color: "var(--text-dark)",
-                                            }}
-                                        >
-                                            <option value="">Select a scholarship...</option>
-                                            <option>Hon John Ogutu Omondi Scholarship</option>
-                                            <option>WAI General Scholarship</option>
-                                            <option>WAI Flight Training Scholarship</option>
-                                        </select>
-                                    </div>
-
-                                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                                        <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--teal-deep)", letterSpacing: "0.5px" }}>
-                                            Tell us about your aviation goals
-                                        </label>
-                                        <textarea
-                                            name="essay"
-                                            rows={4}
-                                            style={{
-                                                border: "1.5px solid #dde2e7",
-                                                borderRadius: 2,
-                                                padding: "0.8rem 1rem",
-                                                fontSize: "0.95rem",
-                                                resize: "vertical",
-                                                background: "white",
-                                                color: "var(--text-dark)",
-                                            }}
-                                        />
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        className="btn-primary"
-                                        style={{ marginTop: "0.5rem", justifyContent: "center", padding: "1rem" }}
-                                    >
-                                        Submit Application →
-                                    </button>
-                                </form>
+                                <EnquiryForm
+                                    formName="scholarship"
+                                    submitLabel="Send enquiry"
+                                    successTitle="Enquiry received"
+                                    successBody="Thank you. A Chapter member who has been through the scholarship process will get back to you."
+                                    fields={[
+                                        { name: "name", label: "Full name", required: true },
+                                        { name: "email", label: "Email address", type: "email", required: true },
+                                        { name: "phone", label: "Phone number", type: "tel", required: true },
+                                        { name: "school", label: "School / institution", required: true },
+                                        {
+                                            name: "scholarship",
+                                            label: "Scholarship you are interested in",
+                                            type: "select",
+                                            required: true,
+                                            placeholder: "Select a scholarship\u2026",
+                                            options: [
+                                                "Hon John Ogutu Omondi Scholarship",
+                                                "WAI flight training scholarship",
+                                                "WAI maintenance or engineering scholarship",
+                                                "WAI dispatch or air traffic scholarship",
+                                                "WAI management or leadership scholarship",
+                                                "Not sure \u2014 please advise",
+                                            ],
+                                        },
+                                        { name: "essay", label: "Tell us about your aviation goals", type: "textarea", required: true, rows: 4 },
+                                    ]}
+                                />
 
                                 <p style={{ marginTop: "1.5rem", fontSize: "0.82rem", color: "var(--gray)", textAlign: "center" }}>
                                     Questions? Email{" "}
